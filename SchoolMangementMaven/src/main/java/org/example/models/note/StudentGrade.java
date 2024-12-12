@@ -1,7 +1,7 @@
 package org.example.models.note;
 
-import models.academique.ModuleElement;
-import models.user.Student;
+import org.example.models.academique.ModuleElement;
+import org.example.models.user.Student;
 
 public  class StudentGrade {
   private Student student;

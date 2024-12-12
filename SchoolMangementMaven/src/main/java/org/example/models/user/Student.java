@@ -1,8 +1,8 @@
 package org.example.models.user;
 
-import models.academique.Filiere;
-import models.academique.ModuleElement;
-import models.note.StudentGrade;
+import org.example.models.academique.Filiere;
+import org.example.models.academique.ModuleElement;
+import org.example.models.note.StudentGrade;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ public class Student {
   private String firstName;
   private String lastName;
   private Filiere filiere;
-  private Map<ModuleElement, List<StudentGrade>> grades;
+  private Map<ModuleElement, StudentGrade> grades;
 
   public Student(String id, String firstName, String lastName, Filiere filiere) {
     this.id = id;
