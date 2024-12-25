@@ -1,17 +1,16 @@
 package org.example.controllers;
 
-
 import org.example.zapp.AppState;
 import org.example.zapp.Renderer;
 
-
 import java.util.Scanner;
 
-public class Controller {
+public class ProfController {
+
   private final AppState state;
   private final Renderer renderer;
 
-  public Controller(AppState state, Renderer renderer) {
+  public ProfController(AppState state, Renderer renderer) {
     this.state = state;
     this.renderer = renderer;
   }
@@ -43,7 +42,7 @@ public class Controller {
 
     switch (choice) {
       case "1" : state.setCurrentMenu("gerer Profs");
-      break ;
+        break ;
       case "2" : state.setCurrentMenu("action2");
         break ;
       case "3" : {

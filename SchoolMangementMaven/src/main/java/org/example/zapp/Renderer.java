@@ -2,8 +2,9 @@ package org.example.zapp;
 
 
 
-import org.example.models.user.UserRole;
+import org.example.zapp.vue.AdminView;
 import org.example.zapp.vue.LoginView;
+import org.example.zapp.vue.Prof.MainMenuProf;
 import org.example.zapp.vue.View;
 
 import java.util.Arrays;
@@ -21,28 +22,18 @@ public class Renderer {
       case "login":
         LoginView.displayLoginPrompt();
         break;
-      case "Main":
-        if (state.isAuthenticated() && state.getUser().getRole().equals(UserRole.Administrator)) {
-         
-          renderAdminMenu();
-        } else if(state.isAuthenticated() && state.getUser().getRole().equals(UserRole.Professor)) {
-
-          renderProfessorMenu();
-        }
-        else {
-            LoginView.displayLoginPrompt();
-          }
+      case "AdminMain":
+          AdminView.displayAdminMenu();
+        break;
+      case  "ProfMain" :
+          MainMenuProf.displayMenuProf();
 
         break;
-
-
       default:
         View.displayMessage("Unknown menu state!");
         break;
     }
   }
-
-
   private void renderAdminMenu() {
     View.displayMessage("Welcome Admin!");
     List<String> adminMenu = Arrays.asList(
@@ -53,15 +44,12 @@ public class Renderer {
     );
     View.renderMenu(adminMenu);
   }
-
   private void renderProfessorMenu() {
     View.displayMessage("Welcome Professor!");
     List<String> professorMenu = Arrays.asList(
-      "View Classes",
-      "Grade Students",
+      "Classes",
       "Logout"
     );
     View.renderMenu(professorMenu);
   }
-
 }

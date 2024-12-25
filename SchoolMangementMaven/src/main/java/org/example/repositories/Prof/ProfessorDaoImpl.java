@@ -1,17 +1,18 @@
-package org.example.repositories;
+package org.example.repositories.Prof;
 
 import org.example.config.Database;
 import org.example.config.MySQLDatabase;
-import org.example.models.user.Professor;
-import org.example.models.user.ProfessorBuilder;
-import org.example.models.user.User;
+import org.example.models.user.Prof.Professor;
+import org.example.models.user.Prof.ProfessorBuilder;
+import org.example.models.user.User.User;
+import org.example.repositories.Repository;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ProfessorDaoImpl implements  Repository<User,String>{
+public class ProfessorDaoImpl implements Repository<User,String> {
   Database database = MySQLDatabase.getInstance();
 
 
@@ -23,14 +24,19 @@ public class ProfessorDaoImpl implements  Repository<User,String>{
 
   @Override
   public boolean save(User professor) throws SQLException {
-    database.executeQuery(String.format("insert into Users values '%s' , '%s' , '%s'  , '%s'  , '%s', '%s' " ,
-      professor.getId() ,
-      professor.getLogin() ,
-      professor.getPassword() ,
-      professor.getFirstName() ,
-      professor.getLastName() ,
-      professor.getRole() ));
-    return false;
+    try {
+      database.executeQuery(String.format("insert into Users values '%s' , '%s' , '%s'  , '%s'  , '%s', '%s' ",
+        professor.getId(),
+        professor.getLogin(),
+        professor.getPassword(),
+        professor.getFirstName(),
+        professor.getLastName(),
+        professor.getRole()));
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
   }
 
   @Override

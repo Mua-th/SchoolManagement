@@ -2,9 +2,8 @@ package org.example.controllers;
 
 
 
-import org.example.models.user.User;
-import org.example.models.user.UserRole;
-import org.example.repositories.UserRepository;
+import org.example.models.user.User.User;
+import org.example.models.user.User.UserRole;
 import org.example.services.user.UserService;
 import org.example.zapp.AppState;
 import org.example.zapp.Renderer;
@@ -42,10 +41,10 @@ public class LoginController {
       state.setAuthenticated(true);
       state.setUsername(user);
       if(user.getRole().equals(UserRole.Administrator)){
-        state.setCurrentMenu("Main");
+        state.setCurrentMenu("AdminMain");
       }
       else {
-        state.setCurrentMenu("Main");
+        state.setCurrentMenu("ProfMain");
 
       }
        // Redirect to main menu
@@ -55,5 +54,13 @@ public class LoginController {
     }
 
     renderer.render(); // Re-render UI after login attempt
+  }
+
+  public void handleLogout() {
+    state.setAuthenticated(false);
+    state.setUsername(null);
+    state.setCurrentMenu("login");
+    System.out.println("You have been logged out.");
+    renderer.render();
   }
 }

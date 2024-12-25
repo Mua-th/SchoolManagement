@@ -1,6 +1,6 @@
-package org.example.repositories;
+package org.example.repositories.User;
 
-import org.example.models.user.User;
+import org.example.models.user.User.User;
 
 import java.sql.SQLException;
 

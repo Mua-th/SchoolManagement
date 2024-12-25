@@ -1,4 +1,4 @@
-package org.example.models.user;
+package org.example.models.user.User;
 
 public abstract class User {
   private String id;

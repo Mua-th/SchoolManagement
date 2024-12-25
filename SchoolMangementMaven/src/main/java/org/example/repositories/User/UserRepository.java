@@ -1,18 +1,17 @@
-package org.example.repositories;
+package org.example.repositories.User;
 
 import org.example.config.Database;
 import org.example.config.MySQLDatabase;
-import org.example.models.user.Professor;
-import org.example.models.user.ProfessorBuilder;
-import org.example.models.user.User;
-import org.example.models.user.UserFactory;
+import org.example.models.user.User.User;
+import org.example.models.user.User.UserFactory;
+import org.example.repositories.Repository;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserRepository implements UserDAO , Repository<User,String>  {
+public class UserRepository implements UserDAO, Repository<User,String> {
 
   private static UserRepository instance ;
 

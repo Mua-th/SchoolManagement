@@ -1,6 +1,9 @@
-package org.example.models.user;
+package org.example.models.user.Admin;
 
-public class Admin extends User{
+import org.example.models.user.User.User;
+import org.example.models.user.User.UserRole;
+
+public class Admin extends User {
 
 
   public Admin(String login, String password, String firstName, String lastName) {

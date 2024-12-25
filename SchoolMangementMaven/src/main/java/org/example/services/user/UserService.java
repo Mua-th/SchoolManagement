@@ -1,7 +1,7 @@
 package org.example.services.user;
 
-import org.example.models.user.User;
-import org.example.repositories.UserRepository;
+import org.example.models.user.User.User;
+import org.example.repositories.User.UserRepository;
 
 import java.sql.SQLException;
 

@@ -1,4 +1,4 @@
-package org.example.models.user;
+package org.example.models.user.Student;
 
 import org.example.models.academique.Filiere;
 import org.example.models.academique.ModuleElement;

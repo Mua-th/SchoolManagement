@@ -1,7 +1,7 @@
 package org.example.zapp;
 
 
-import org.example.models.user.User;
+import org.example.models.user.User.User;
 
 public class AppState {
   private String currentMenu;
