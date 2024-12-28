@@ -1,8 +1,8 @@
-package org.example.models.user.User;
+package org.example.models.users.User;
 
 
-import org.example.models.user.Admin.AdminBuilder;
-import org.example.models.user.Prof.ProfessorBuilder;
+import org.example.models.users.Admin.AdminBuilder;
+import org.example.models.users.Prof.ProfessorBuilder;
 
 public class UserFactory {
 

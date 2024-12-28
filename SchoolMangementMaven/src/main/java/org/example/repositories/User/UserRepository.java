@@ -1,21 +1,23 @@
 package org.example.repositories.User;
 
-import org.example.config.Database;
-import org.example.config.MySQLDatabase;
-import org.example.models.user.User.User;
-import org.example.models.user.User.UserFactory;
+import org.example.models.users.User.User;
+import org.example.models.users.User.UserFactory;
 import org.example.repositories.Repository;
+import org.example.repositories.SuperRepo;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserRepository implements UserDAO, Repository<User,String> {
+public class UserRepository extends SuperRepo implements UserDAO, Repository<User,String> {
 
   private static UserRepository instance ;
 
-  private Database dbConnection = MySQLDatabase.getInstance();
+  public UserRepository() {
+    super(myDatabase);
+  }
+
 
   public static UserRepository getInstance(){
     if(instance==null){
@@ -26,8 +28,8 @@ public class UserRepository implements UserDAO, Repository<User,String> {
 
   @Override
   public User findById(String id) throws SQLException {
-    Connection connection = dbConnection.connect();
-    ResultSet rs = dbConnection.fetchResults(String.format("SELECT * FROM Users where id ='%s';" , id));
+    Connection connection = myDatabase.connect();
+    ResultSet rs = myDatabase.fetchResults(String.format("SELECT * FROM Users where id ='%s';" , id));
     String login ="" , firstName="" , lastName="" ,role = "" , password="" ;
     User user = null;
     while (rs.next()) {
@@ -37,7 +39,7 @@ public class UserRepository implements UserDAO, Repository<User,String> {
       lastName = rs.getString("lastName");
       role = rs.getString("role");
     }
-    dbConnection.disconnect();
+    myDatabase.disconnect();
 
 
     user = UserFactory.createUser(id , password , firstName,lastName , login , role);
@@ -62,9 +64,9 @@ public class UserRepository implements UserDAO, Repository<User,String> {
 
   @Override
   public User findByLogin(String login) throws SQLException {
-    Connection connection = dbConnection.connect();
+    Connection connection = myDatabase.connect();
 
-    ResultSet rs = dbConnection.fetchResults(String.format("SELECT * FROM Users where login ='%s';" , login));
+    ResultSet rs = myDatabase.fetchResults(String.format("SELECT * FROM Users where login ='%s';" , login));
      String id ="", firstName="" , lastName="" ,role = "" , password="" ;
     User user = null;
     while (rs.next()) {
@@ -74,7 +76,7 @@ public class UserRepository implements UserDAO, Repository<User,String> {
       lastName = rs.getString("lastName");
       role = rs.getString("role");
     }
-    dbConnection.disconnect();
+    myDatabase.disconnect();
 
 
     user = UserFactory.createUser(id , password , firstName,lastName , login , role);

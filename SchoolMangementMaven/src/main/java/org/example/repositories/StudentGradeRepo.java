@@ -12,16 +12,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentGradeRepo implements Repository<StudentGrade, StudentGradeId>{
+public class StudentGradeRepo extends SuperRepo implements Repository<StudentGrade, StudentGradeId>{
 
 
-  private Database dbConnection = MySQLDatabase.getInstance();
+
+
+
 
 
   //implement the singleton pattern for the StudentGradeRepo
   private static StudentGradeRepo instance;
 
   private StudentGradeRepo() {
+    super(myDatabase);
   }
 
   public static StudentGradeRepo getInstance() {
@@ -49,8 +52,8 @@ public class StudentGradeRepo implements Repository<StudentGrade, StudentGradeId
   @Override
   public boolean save(StudentGrade studentGrade) throws SQLException {
     try {
-      dbConnection.connect();
-      dbConnection.executeQuery(String.format(
+      myDatabase.connect();
+      myDatabase.executeQuery(String.format(
         "INSERT INTO studentgrade (studentId, moduleElementCode, modality, grade, isAbsent) VALUES ('%s', '%s', '%s', '%s', '%s');",
         studentGrade.getStudentGradeId().getStudentId(),
         studentGrade.getStudentGradeId().getModuleElementCode(),
@@ -59,7 +62,11 @@ public class StudentGradeRepo implements Repository<StudentGrade, StudentGradeId
         0 // Assuming isAbsent is always false as per your initial table definition
       ));
     } catch (SQLException e) {
-      e.printStackTrace();
+      if (e instanceof java.sql.SQLIntegrityConstraintViolationException) {
+        System.err.println("Error: Cannot add or update a child row: a foreign key constraint fails.");
+      } else {
+        e.printStackTrace();
+      }
       return false;
     }
     return true;
@@ -71,9 +78,9 @@ public class StudentGradeRepo implements Repository<StudentGrade, StudentGradeId
 
   // implement a method to get all the grades of a student use sql query to get the grades
   public List<StudentGrade> getStudentGrades(String studentId) throws SQLException {
-    Connection connection = dbConnection.connect();
+    Connection connection = myDatabase.connect();
 
-    ResultSet resultSet = dbConnection.fetchResults(String.format("SELECT * FROM studentgrade where studentid ='%s';" , studentId));
+    ResultSet resultSet = myDatabase.fetchResults(String.format("SELECT * FROM studentgrade where studentid ='%s';" , studentId));
     List<StudentGrade> studentGrades = new ArrayList<>();
 
     while (resultSet.next()) {
@@ -101,8 +108,8 @@ public class StudentGradeRepo implements Repository<StudentGrade, StudentGradeId
   }
 
   public List<StudentGrade> findByModuleElement(String moduleElementCode) throws SQLException {
-    Connection connection = dbConnection.connect();
-    ResultSet resultSet = dbConnection.fetchResults(String.format("SELECT * FROM studentgrade WHERE moduleElementCode = '%s';", moduleElementCode));
+    Connection connection = myDatabase.connect();
+    ResultSet resultSet = myDatabase.fetchResults(String.format("SELECT * FROM studentgrade WHERE moduleElementCode = '%s';", moduleElementCode));
     List<StudentGrade> studentGrades = new ArrayList<>();
 
     while (resultSet.next()) {

@@ -1,9 +1,5 @@
 package org.example.models.note;
 
-import org.example.models.academique.ModuleElement;
-import org.example.models.user.Student.Student;
-
-
 
 public  class StudentGrade {
 

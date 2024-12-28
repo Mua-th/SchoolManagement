@@ -1,33 +1,33 @@
 package org.example.config;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 
 public class MySQLDatabase implements Database {
-  private static final String URL = "jdbc:mysql://localhost:3306/schoolmanagement";
-  private static final String USER = "root";
-  private static final String PASSWORD = "PFH#23kgrw9";
-  private Connection connection;
   private static MySQLDatabase instance;
-  private MySQLDatabase() {
+  private final String url;
+  private final String user;
+  private final String password;
+  private Connection connection;
+
+  MySQLDatabase(String url, String user, String password) {
+    this.url = url;
+    this.user = user;
+    this.password = password;
   }
-  public static MySQLDatabase getInstance() {
+
+  public static MySQLDatabase getInstance(String url, String user, String password) {
     if (instance == null) {
-      synchronized (MySQLDatabase.class) {
-        if (instance == null) {
-          instance = new MySQLDatabase();
-        }
-      }
+      instance = new MySQLDatabase(url, user, password);
     }
     return instance;
   }
+
   @Override
   public Connection connect() throws SQLException {
     if (connection == null || connection.isClosed()) {
       try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        connection = DriverManager.getConnection(url, user, password);
         System.out.println("Connected to MySQL database.");
       } catch (ClassNotFoundException e) {
         throw new SQLException("MySQL Driver not found!", e);
@@ -35,6 +35,7 @@ public class MySQLDatabase implements Database {
     }
     return connection;
   }
+
   @Override
   public void disconnect() throws SQLException {
     if (connection != null && !connection.isClosed()) {
@@ -42,15 +43,27 @@ public class MySQLDatabase implements Database {
       System.out.println("Disconnected from MySQL database.");
     }
   }
+
   @Override
   public void executeQuery(String query) throws SQLException {
     try (var stmt = connection.createStatement()) {
       stmt.execute(query);
     }
   }
+
   @Override
   public ResultSet fetchResults(String query) throws SQLException {
     var stmt = connection.createStatement();
     return stmt.executeQuery(query);
+  }
+
+  @Override
+  public void executeStatement(PreparedStatement stmt) throws SQLException {
+    stmt.execute();
+  }
+
+  @Override
+  public ResultSet fetchResults(PreparedStatement stmt) throws SQLException {
+    return stmt.executeQuery();
   }
 }

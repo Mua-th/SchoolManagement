@@ -1,26 +1,46 @@
 package org.example.zapp;
 
+import org.example.config.DatabaseFactory;
+import org.example.models.users.User.User;
 
-import org.example.models.user.User.User;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class AppState {
-  private String currentMenu;
   private boolean isAuthenticated;
-  private User user;
+  private static User user;
+  private static AppState instance;
 
-  public AppState() {
-    this.currentMenu = "login";
+  public static String getGuiType() {
+    Properties properties = new Properties();
+    try (InputStream input = DatabaseFactory.class.getClassLoader().getResourceAsStream("app.properties")) {
+      if (input == null) {
+        throw new RuntimeException("Unable to find app.properties");
+      }
+      properties.load(input);
+    } catch (IOException ex) {
+      throw new RuntimeException("Error reading app.properties", ex);
+    }
+
+    return properties.getProperty("gui.type");
+  }
+
+
+  private AppState() {
     this.isAuthenticated = false;
     this.user = null;
   }
 
-
-  public String getCurrentMenu() {
-    return currentMenu;
-  }
-
-  public void setCurrentMenu(String currentMenu) {
-    this.currentMenu = currentMenu;
+  public static AppState getInstance() {
+    if (instance == null) {
+      synchronized (AppState.class) {
+        if (instance == null) {
+          instance = new AppState();
+        }
+      }
+    }
+    return instance;
   }
 
   public boolean isAuthenticated() {
@@ -31,11 +51,11 @@ public class AppState {
     isAuthenticated = authenticated;
   }
 
-  public User getUser() {
+  public static User getUser() {
     return user;
   }
 
-  public void setUsername(User user) {
+  public void setUser(User user) {
     this.user = user;
   }
 }

@@ -1,10 +1,6 @@
 package org.example.models.note;
 
-import org.example.models.academique.ModuleElement;
-import org.example.models.user.Student.Student;
-
 import java.io.Serializable;
-import java.util.Objects;
 
 public class StudentGradeId implements Serializable {
   private String studentId;

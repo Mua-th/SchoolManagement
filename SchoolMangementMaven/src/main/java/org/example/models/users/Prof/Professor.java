@@ -1,8 +1,8 @@
-package org.example.models.user.Prof;
+package org.example.models.users.Prof;
 
 import org.example.models.academique.ModuleElement;
-import org.example.models.user.User.User;
-import org.example.models.user.User.UserRole;
+import org.example.models.users.User.User;
+import org.example.models.users.User.UserRole;
 
 import java.util.List;
 

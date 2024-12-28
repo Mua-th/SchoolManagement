@@ -1,85 +1,125 @@
 package org.example.controllers;
 
+import org.example.models.academique.ModuleElement;
+import org.example.models.note.StudentGrade;
+import org.example.models.note.StudentGradeBuilder;
+import org.example.models.note.StudentGradeId;
+import org.example.models.users.Student.Student;
+import org.example.repositories.StudentGradeRepo;
+import org.example.services.academique.ModuleElementService;
+import org.example.services.academique.ModuleElementServiceImpl;
+import org.example.services.note.StudentGradeService;
+import org.example.services.user.StudentService;
 import org.example.zapp.AppState;
-import org.example.zapp.Renderer;
 
+import org.example.zapp.vue.Prof.ViewProf;
+import org.example.zapp.vue.Prof.ViewProfInterface;
+
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProfController {
 
-  private final AppState state;
-  private final Renderer renderer;
+  private final ModuleElementService moduleElementService;
+  private final StudentGradeService studentGradeService ;
 
-  public ProfController(AppState state, Renderer renderer) {
-    this.state = state;
-    this.renderer = renderer;
+  private ViewProfInterface viewProf =  ViewProf.getInstance();
+  LogoutController logoutController;
+
+  StudentService studentService ;
+
+
+  public ProfController() {
+    this.moduleElementService = new ModuleElementServiceImpl();
+    this.studentGradeService = StudentGradeService.getInstance();
+    logoutController = new LogoutController(AppState.getInstance());
+
   }
 
-  /**
-   * Handles user input based on the current menu in AppState.
-   */
+
+  public ProfController(ModuleElementService moduleElementService, StudentGradeService studentGradeService, StudentService studentService, AppState appState) {
+    this.moduleElementService = moduleElementService;
+    this.studentGradeService = studentGradeService;
+    this.studentService = studentService;
+    this.logoutController = new LogoutController(appState);
+  }
+
+  public ProfController(ModuleElementService moduleElementService, StudentGradeService studentGradeService, StudentService studentService) {
+    this.moduleElementService = moduleElementService;
+    this.studentGradeService = studentGradeService;
+    this.studentService = studentService;
+    logoutController = new LogoutController(AppState.getInstance());
+  }
+
   public void handleInput() {
-    System.out.println("wawawaw");
-    Scanner scanner = new Scanner(System.in);
+   // Scanner scanner = new Scanner(System.in);
 
-    switch (state.getCurrentMenu()) {
-      case "main" : handleMainMenu(scanner);
-      case "ProfMain" : MainProf(scanner);
-      default : {
-        System.out.println("Invalid menu state. Returning to the main menu.");
-        state.setCurrentMenu("main");
-        renderer.render();
-      }
+    String choice = viewProf.getUserChoice();;
+
+    switch (choice) {
+      case "1":
+        handleViewModuleElements();
+        break;
+      case "2":
+        handleInsertStudentGrade();
+        break;
+        case "3":
+        handleFindStudentById();
+        break;
+      case "4":
+        logoutController.handleLogout();
+        break;
+      default:
+        viewProf.displayMessage("Invalid choice. Please try again.");
     }
   }
 
-  /**
-   * Handles the main menu and user selections.
-   */
-  private void handleMainMenu(Scanner scanner) {
-
-    String choice = scanner.nextLine();
-
-    switch (choice) {
-      case "1" : state.setCurrentMenu("gerer Profs");
-        break ;
-      case "2" : state.setCurrentMenu("action2");
-        break ;
-      case "3" : {
-        state.setAuthenticated(false);
-        state.setUsername(null);
-        state.setCurrentMenu("login");
-        System.out.println("\nYou have logged out successfully.");
+  private Student handleFindStudentById() {
+    try {
+      String studentId = viewProf.findStudentByIdForm();
+     // System.out.println("studentId: " + studentId + "profId: " + AppState.getUser().getId());
+      Student student = studentService.findByIdForProf(AppState.getUser().getId() , studentId);
+      if (student != null) {
+        viewProf.displayStudent(student);
+        return student;
+      } else {
+        viewProf.displayMessage("Student not found.");
+        return null;
       }
-      break ;
-      default : System.out.println("\nInvalid choice. Please try again.");
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return null;
     }
 
-    renderer.render();
   }
 
-  private void MainProf(Scanner scanner) {
-    String choice = scanner.nextLine();
+  private void handleViewModuleElements() {
+    try {
+      String professorId = AppState.getUser().getId();
+      List<ModuleElement> moduleElements = moduleElementService.getModuleElementsByProfId(professorId);
+       viewProf.displayModuleElements(moduleElements);
+      ModuleElement selectedmoduleElement = viewProf.handleModuleElementSelection(moduleElements);
+      viewProf.displaySubscribedStudents(selectedmoduleElement, moduleElementService.getSubscribedStudents(selectedmoduleElement));
 
-    switch (choice) {
-      case "1" : state.setCurrentMenu("gerer Profs");
-        break ;
-      case "2" : state.setCurrentMenu("action2");
-        break ;
-      case "3" : {
-        state.setAuthenticated(false);
-        state.setUsername(null);
-        state.setCurrentMenu("login");
-        System.out.println("\nYou have logged out successfully.");
-      }
-      break ;
-      default : System.out.println("\nInvalid choice. Please try again.");
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
+  }
 
-    state.setCurrentMenu("classes");
+  private void handleInsertStudentGrade( ) {
+    try {
 
-    renderer.render();
-
-
+      boolean isSaved = studentGradeService.save( viewProf.insertStudentGradeForm());
+      if (isSaved) {
+        viewProf.displayMessage("Student grade saved successfully.");
+        //System.out.println("Student grade saved successfully.");
+      } else {
+        viewProf.displayMessage("Failed to save student grade.");
+       // System.out.println("Failed to save student grade.");
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }

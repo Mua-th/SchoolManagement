@@ -1,4 +1,4 @@
-package org.example.models.user.Admin;
+package org.example.models.users.Admin;
 
 public class AdminBuilder {
   private String id;

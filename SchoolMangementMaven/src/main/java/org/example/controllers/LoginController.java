@@ -1,66 +1,47 @@
 package org.example.controllers;
 
-
-
-import org.example.models.user.User.User;
-import org.example.models.user.User.UserRole;
+import org.example.models.users.User.User;
+import org.example.models.users.User.UserRole;
 import org.example.services.user.UserService;
 import org.example.zapp.AppState;
-import org.example.zapp.Renderer;
-import org.example.zapp.vue.LoginView;
+import org.example.zapp.vue.AdminView;
+import org.example.zapp.vue.LoginViewInterface;
+import org.example.zapp.vue.Prof.ViewProf;
 
 import java.sql.SQLException;
-import java.util.Scanner;
 
 public class LoginController {
 
-  private final UserService userService ;
-  private final AppState state;
-  private final Renderer renderer;
+  private final UserService userService;
+  private final AppState state = AppState.getInstance();
+  private final LoginViewInterface loginView;
 
-  public LoginController(UserService userService, AppState state, Renderer renderer) {
+  public LoginController(UserService userService, LoginViewInterface loginView) {
     this.userService = userService;
-    this.state = state;
-    this.renderer = renderer;
-
+    this.loginView = loginView;
   }
 
   public void handleLogin() throws SQLException {
-    Scanner scanner = new Scanner(System.in);
-    // Get username
-    LoginView.displayLoginPrompt();
-    String login = scanner.nextLine();
+    loginView.displayLoginPrompt();
+    String login = loginView.getUsername();
 
-    User user = userService.findByLogin(login) ;
-    // Get password
-    LoginView.displayPasswordPrompt();
-    String password = scanner.nextLine();
+    User user = userService.findByLogin(login);
+    loginView.displayPasswordPrompt();
+    String password = loginView.getPassword();
 
-    // Validate credentials
-    if ( user.getPassword().equals(password)) {
+    if (user.getPassword().equals(password)) {
       state.setAuthenticated(true);
-      state.setUsername(user);
-      if(user.getRole().equals(UserRole.Administrator)){
-        state.setCurrentMenu("AdminMain");
-      }
-      else {
-        state.setCurrentMenu("ProfMain");
+      state.setUser(user);
+      loginView.displayLoginSuccess(user.getLogin());
 
+      if (user.getRole().equals(UserRole.Administrator)) {
+        AdminView.displayAdminMenu();
+      } else {
+        ViewProf.getInstance().displayMenuProf();
       }
-       // Redirect to main menu
-      LoginView.displayLoginSuccess(user.getFirstName());
+
     } else {
-      LoginView.displayLoginFailure();
+      loginView.displayLoginFailure();
     }
-
-    renderer.render(); // Re-render UI after login attempt
-  }
-
-  public void handleLogout() {
-    state.setAuthenticated(false);
-    state.setUsername(null);
-    state.setCurrentMenu("login");
-    System.out.println("You have been logged out.");
-    renderer.render();
   }
 }

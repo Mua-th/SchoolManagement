@@ -1,7 +1,7 @@
 package org.example.repositories.Prof;
 
 
-import org.example.models.user.User.User;
+import org.example.models.users.User.User;
 
 import java.sql.SQLException;
 import java.util.List;

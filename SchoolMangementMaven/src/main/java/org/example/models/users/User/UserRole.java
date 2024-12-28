@@ -1,4 +1,4 @@
-package org.example.models.user.User;
+package org.example.models.users.User;
 
 
 public enum UserRole {
