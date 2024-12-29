@@ -23,6 +23,12 @@ import org.example.zapp.vue.Prof.SwingViewProf;
 import org.example.zapp.vue.Prof.ViewProf;
 import org.example.zapp.vue.Prof.ViewProfInterface;
 import org.example.zapp.vue.SwingLoginView;
+import org.example.vue.FiliereVue.FiliereVue;
+import org.example.repositories.UserRepository;
+import org.example.vue.MenuPrinter;
+import org.example.vue.PrintableToConsole;
+import org.example.vue.StudentVue.StudentVue;
+
 
 import java.sql.SQLException;
 
@@ -74,5 +80,8 @@ public class Main {
         loginController.handleLogin();
       }
     }
+
   }
+
+
 }

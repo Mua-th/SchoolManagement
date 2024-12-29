@@ -3,6 +3,7 @@ package org.example.config;
 import java.sql.*;
 
 public class MySQLDatabase implements Database {
+
   private static MySQLDatabase instance;
   private final String url;
   private final String user;
