@@ -11,12 +11,7 @@ public class Module {
   private List<ModuleElement> moduleElements;
 
 
-  public String getCode() {
-    return code;
-  }
 
-  public void setCode(String code) {
-    this.code = code;
 
   // Constructeur par défaut
   public Module() {
@@ -47,29 +42,12 @@ public class Module {
     return name;
   }
 
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-
   public Filiere getFiliere() {
     return filiere;
   }
 
-
-  public void setFiliere(Filiere filiere) {
-    this.filiere = filiere;
-  }
-
-
   public Semester getSemester() {
     return semester;
-  }
-
-
-  public void setSemester(Semester semester) {
-    this.semester = semester;
   }
 
 

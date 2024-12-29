@@ -1,9 +1,9 @@
 package org.example.vue.StudentVue;
 
 import org.example.models.academique.Filiere;
-import org.example.services.user.StudentService.StudentService;
+import org.example.services.user.StudentServicesabrin.StudentService;
 import org.example.models.user.Student;
-import org.example.services.user.StudentService.StudentServiceImpl;
+import org.example.services.user.StudentServicesabrin.StudentServiceImpl;
 
 import java.sql.SQLException;
 import java.util.Scanner;

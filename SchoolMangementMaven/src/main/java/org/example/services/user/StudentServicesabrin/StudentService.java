@@ -1,4 +1,4 @@
-package org.example.services.user.StudentService;
+package org.example.services.user.StudentServicesabrin;
 
 import org.example.models.academique.Filiere;
 import org.example.models.user.Student;
