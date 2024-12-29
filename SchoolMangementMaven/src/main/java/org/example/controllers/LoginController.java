@@ -4,9 +4,9 @@ import org.example.models.users.User.User;
 import org.example.models.users.User.UserRole;
 import org.example.services.user.UserService;
 import org.example.zapp.AppState;
-import org.example.zapp.vue.AdminView;
+import org.example.zapp.vue.Admin.AdminView;
+import org.example.zapp.vue.Admin.AdminViewInterface;
 import org.example.zapp.vue.LoginViewInterface;
-import org.example.zapp.vue.Prof.ViewProf;
 import org.example.zapp.vue.Prof.ViewProfInterface;
 
 import java.sql.SQLException;
@@ -19,11 +19,13 @@ public class LoginController implements Observer {
   private final AppState state = AppState.getInstance();
   private final LoginViewInterface loginView;
   private final ViewProfInterface viewProf ;
+  private AdminViewInterface adminView ;
 
-  public LoginController(UserService userService, LoginViewInterface loginView, ViewProfInterface viewProf) {
+  public LoginController(UserService userService, LoginViewInterface loginView, ViewProfInterface viewProf, AdminViewInterface adminView) {
     this.userService = userService;
     this.loginView = loginView;
     this.viewProf = viewProf;
+    this.adminView = adminView ;
   }
 
   public void handleLogin() throws SQLException {
@@ -41,7 +43,7 @@ public class LoginController implements Observer {
 
       if (user.getRole().equals(UserRole.Administrator)) {
 
-        AdminView.displayAdminMenu();
+        adminView.displayAdminMenu();
       } else {
         //ViewProf.getInstance().displayMenuProf();
         viewProf.displayMenuProf();

@@ -11,8 +11,6 @@ public class Module {
   private List<ModuleElement> moduleElements;
 
 
-
-
   // Constructeur par défaut
   public Module() {
   }

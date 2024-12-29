@@ -1,6 +1,8 @@
 package org.example.repositories.FiliereDAO;
+import org.example.config.Database;
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
+import org.example.repositories.SuperRepo;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -8,28 +10,26 @@ import java.util.Optional;
 import java.sql.*;
 
 
-public class FiliereDAOImpl implements FiliereDAO {
-    private static FiliereDAOImpl instance;
-    private Connection connection;
+public class FiliereDAOImpl extends SuperRepo implements FiliereDAO {
 
-    private FiliereDAOImpl() {
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schoolmanagement", "root", "");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+    public FiliereDAOImpl() {
+        super(myDatabase);
     }
 
-    public static FiliereDAOImpl getInstance() {
-        if (instance == null) {
+    private static FiliereDAOImpl instance ;
+    public static FiliereDAOImpl getInstance(){
+        if(instance == null) {
             instance = new FiliereDAOImpl();
+
         }
-        return instance;
+        return instance ;
     }
 
     @Override
-    public void addFiliere(Filiere filiere) {
+    public void addFiliere(Filiere filiere) throws SQLException {
         String query = "INSERT INTO filiere (code, name) VALUES (?, ?)";
+        Connection connection = myDatabase.connect() ;
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, filiere.getCode());
             stmt.setString(2, filiere.getName());
@@ -37,35 +37,46 @@ public class FiliereDAOImpl implements FiliereDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            myDatabase.disconnect();
+        }
     }
 
     @Override
-    public void deleteFiliere(String code) {
+    public void deleteFiliere(String code) throws SQLException {
         String query = "DELETE FROM filiere WHERE code = ?";
+        Connection connection = myDatabase.connect() ;
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, code);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            myDatabase.disconnect();
         }
     }
 
     @Override
-    public void updateFiliere(Filiere filiere) {
+    public void updateFiliere(Filiere filiere) throws SQLException {
         String query = "UPDATE filiere SET name = ? WHERE code = ?";
+
+        Connection connection = myDatabase.connect();
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, filiere.getName());
             stmt.setString(2, filiere.getCode());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            myDatabase.disconnect();
         }
     }
 
     @Override
-    public List<Filiere> getAllFilieres() {
+    public List<Filiere> getAllFilieres() throws SQLException {
         List<Filiere> filieres = new ArrayList<>();
         String query = "SELECT * FROM filiere";
+        Connection connection = myDatabase.connect();
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
                 Filiere filiere = new Filiere(rs.getString("code"), rs.getString("name"));
@@ -73,13 +84,16 @@ public class FiliereDAOImpl implements FiliereDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            myDatabase.disconnect();
         }
         return filieres;
     }
 
     @Override
-    public Optional<Filiere> getFiliereByCode(String code) {
+    public Optional<Filiere> getFiliereByCode(String code) throws SQLException {
         String query = "SELECT * FROM filiere WHERE code = ?";
+        Connection connection = myDatabase.connect();
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, code);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -91,11 +105,15 @@ public class FiliereDAOImpl implements FiliereDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            myDatabase.disconnect();
+        }
         return Optional.empty();
     }
 
-    public boolean checkIfFiliereExists(String code) {
+    public boolean checkIfFiliereExists(String code) throws SQLException {
         String query = "SELECT 1 FROM filiere WHERE code = ?";
+        Connection connection = myDatabase.connect();
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, code);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -103,15 +121,17 @@ public class FiliereDAOImpl implements FiliereDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            myDatabase.disconnect();
         }
         return false;
     }
 
     @Override
-    public List<Module> getModulesByFiliereCode(String code) { // Signature identique
+    public List<Module> getModulesByFiliereCode(String code) throws SQLException { // Signature identique
         List<Module> modules = new ArrayList<>();
         String query = "SELECT * FROM module WHERE filiereCode = ?";
-
+        Connection connection = myDatabase.connect();
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, code);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -125,6 +145,8 @@ public class FiliereDAOImpl implements FiliereDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            myDatabase.disconnect();
         }
         return modules;
     }
