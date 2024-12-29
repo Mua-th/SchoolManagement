@@ -54,7 +54,7 @@ public class ProfController {
   public void handleInput() {
    // Scanner scanner = new Scanner(System.in);
 
-    String choice = viewProf.getUserChoice();;
+    String choice = viewProf.getUserChoice();
 
     switch (choice) {
       case "1":

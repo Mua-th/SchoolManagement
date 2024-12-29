@@ -2,6 +2,8 @@ package org.example.vue.FiliereVue;
 
 import org.example.models.academique.Filiere;
 import org.example.services.user.FiliereService.FiliereService;
+
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.List;
 
@@ -59,7 +61,7 @@ public class FiliereMain {
 }*/
 
 public class FiliereMain {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         // Récupère l'instance unique de FiliereService
         FiliereService filiereService = FiliereService.getInstance();
 
@@ -70,6 +72,8 @@ public class FiliereMain {
             System.out.println("Filière ajoutée avec succès!");
         } catch (SecurityException e) {
             System.out.println("Erreur: " + e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         // Test 2: Mettre à jour une filière
@@ -77,7 +81,7 @@ public class FiliereMain {
         try {
             filiereService.updateFiliere(updatedFiliere);
             System.out.println("Filière mise à jour avec succès!");
-        } catch (SecurityException e) {
+        } catch (SecurityException | SQLException e) {
             System.out.println("Erreur: " + e.getMessage());
         }
 

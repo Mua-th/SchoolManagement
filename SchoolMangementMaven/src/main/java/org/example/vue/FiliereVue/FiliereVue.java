@@ -3,6 +3,8 @@ import org.example.models.academique.Filiere;
 import org.example.services.user.FiliereService.FiliereServiceInterface;
 import org.example.services.user.FiliereService.FiliereService;
 import org.example.models.academique.Module;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -44,34 +46,10 @@ public class FiliereVue implements IFiliereVue {
             choix = scanner.nextInt();
             scanner.nextLine(); // Pour gérer la nouvelle ligne restante
 
-            switch (choix) {
-                case 1:
-                    ajouterFiliere();
-                    break;
-                case 2:
-                    mettreAJourFiliere();
-                    break;
-                case 3:
-                    supprimerFiliere();
-                    break;
-                case 4:
-                    afficherFilieres();
-                    break;
-                case 5:
-                    rechercherFiliere();
-                    break;
-                case 6:
-                    afficherModulesParFiliere();
-                    break;
-                case 7:
-                    System.out.println("Au revoir !");
-                    break;
-                default:
-                    System.out.println("Choix invalide, veuillez réessayer.");
-                    break;
-            }
+
         } while (choix != 7);
     }
+
 
     // Ajouter une filière
     public void ajouterFiliere() {
@@ -80,12 +58,12 @@ public class FiliereVue implements IFiliereVue {
         System.out.print("Nom : ");
         String nom = scanner.nextLine();
         Filiere filiere = new Filiere(code, nom);
-        filiereService.addFiliere(filiere);
+
         System.out.println("Filière ajoutée avec succès !");
     }
 
     // Mettre à jour une filière
-    public void mettreAJourFiliere() {
+    public void mettreAJourFiliere() throws SQLException {
         System.out.print("Code : ");
         String code = scanner.nextLine();
         System.out.print("Nouveau nom : ");
@@ -97,7 +75,7 @@ public class FiliereVue implements IFiliereVue {
     }
 
     // Supprimer une filière
-    public void supprimerFiliere() {
+    public void supprimerFiliere() throws SQLException {
         System.out.print("Code : ");
         String code = scanner.nextLine();
         filiereService.deleteFiliere(code);
@@ -105,7 +83,7 @@ public class FiliereVue implements IFiliereVue {
     }
 
     // Afficher toutes les filières
-    public void afficherFilieres() {
+    public void afficherFilieres() throws SQLException {
         List<Filiere> filieres = filiereService.getAllFilieres();
         System.out.println("Liste des filières :");
         for (Filiere filiere : filieres) {
@@ -114,7 +92,7 @@ public class FiliereVue implements IFiliereVue {
     }
 
     // Rechercher une filière par code
-    public void rechercherFiliere() {
+    public void rechercherFiliere() throws SQLException {
         System.out.print("Code : ");
         String code = scanner.nextLine();
 
@@ -127,7 +105,7 @@ public class FiliereVue implements IFiliereVue {
         }
     }
 
-    private void afficherModulesParFiliere() {
+    private void afficherModulesParFiliere() throws SQLException {
         System.out.print("Code de la filière : ");
         String code = scanner.nextLine();
 

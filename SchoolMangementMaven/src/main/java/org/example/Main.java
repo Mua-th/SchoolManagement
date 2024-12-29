@@ -16,6 +16,9 @@ import org.example.services.user.StudentService;
 import org.example.services.user.StudentServiceImpl;
 import org.example.services.user.UserService;
 import org.example.zapp.AppState;
+import org.example.zapp.vue.Admin.AdminView;
+import org.example.zapp.vue.Admin.AdminViewInterface;
+import org.example.zapp.vue.Admin.SwingAdminView;
 import org.example.zapp.vue.LoginView;
 import org.example.zapp.vue.LoginViewInterface;
 import org.example.zapp.vue.MainFrame;
@@ -36,6 +39,7 @@ public class Main {
     String guiType = AppState.getGuiType();
     LoginViewInterface loginView;
     ViewProfInterface viewProf;
+    AdminViewInterface adminView ;
 
     MainFrame mainFrame = MainFrame.getInstance();
 
@@ -44,20 +48,25 @@ public class Main {
       loginView = swingLoginView;
       SwingViewProf swingViewProf = new SwingViewProf();
       viewProf = swingViewProf;
+      SwingAdminView swingAdminView = new SwingAdminView() ;
+      adminView = swingAdminView ;
 
-      swingLoginView.addObserver(new LoginController(new UserService(UserRepository.getInstance()), loginView, viewProf));
+
+
+      swingLoginView.addObserver(new LoginController(new UserService(UserRepository.getInstance()), loginView, viewProf , adminView));
     } else {
       loginView = LoginView.getInstance();
       viewProf = ViewProf.getInstance();
+      adminView = AdminView.getInstance();
     }
 
     LoginController loginController = new LoginController(
-      new UserService(UserRepository.getInstance()), loginView, viewProf);
+      new UserService(UserRepository.getInstance()), loginView, viewProf, adminView);
 
     while (true) {
       if (AppState.getInstance().isAuthenticated()) {
         if (AppState.getInstance().getUser().getRole().equals(UserRole.Administrator)) {
-          AdminController adminController = new AdminController();
+          AdminController adminController = new AdminController( adminView);
           adminController.handleInput();
         } else {
           StudentService studentService = StudentServiceImpl.getInstance(StudentDAOImpl.getInstance());
