@@ -39,6 +39,6 @@ public class ProfControllerBuilder {
   }
 
   public ProfController build() {
-    return new ProfController(moduleElementService, studentGradeService, studentService, appState);
+    return new ProfController(moduleElementService, studentGradeService, studentService, appState,viewProf);
   }
 }

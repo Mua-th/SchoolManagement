@@ -1,5 +1,6 @@
 package org.example.zapp;
 
+import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
 import org.example.models.note.StudentGradeBuilder;
 import org.example.models.note.StudentGradeId;
@@ -48,7 +49,7 @@ public class TestStudentGrades {
           scanner.nextLine(); // Consume newline
 
           StudentGrade newStudentGrade = new StudentGradeBuilder()
-            .studentGradeId(new StudentGradeId(newStudentId, moduleElementCode, modality))
+            .studentGradeId(new StudentGradeId(newStudentId, moduleElementCode, EvaluationModality.valueOf(modality)))
             .grade(newgrade)
             .build();
 

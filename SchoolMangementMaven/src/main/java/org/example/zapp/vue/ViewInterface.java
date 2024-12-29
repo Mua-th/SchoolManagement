@@ -1,8 +1,13 @@
 package org.example.zapp.vue;
 
-import java.util.List;
+import org.example.models.note.EvaluationModality;
 
-public interface ViewInterface {
+import java.util.List;
+import java.util.Observer;
+
+public interface ViewInterface  {
   void renderMenu(List<String> options);
   void displayMessage(String message);
+
+
 }

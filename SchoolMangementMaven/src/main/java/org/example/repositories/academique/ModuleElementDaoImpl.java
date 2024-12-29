@@ -3,6 +3,7 @@ package org.example.repositories.academique;
 import org.example.config.Database;
 import org.example.config.MySQLDatabase;
 import org.example.models.academique.ModuleElement;
+import org.example.models.note.StudentGrade;
 import org.example.models.users.Student.Student;
 import org.example.repositories.SuperRepo;
 

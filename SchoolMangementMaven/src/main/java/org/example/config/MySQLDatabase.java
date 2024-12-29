@@ -28,7 +28,7 @@ public class MySQLDatabase implements Database {
       try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(url, user, password);
-        System.out.println("Connected to MySQL database.");
+       // System.out.println("Connected to MySQL database.");
       } catch (ClassNotFoundException e) {
         throw new SQLException("MySQL Driver not found!", e);
       }
@@ -40,7 +40,7 @@ public class MySQLDatabase implements Database {
   public void disconnect() throws SQLException {
     if (connection != null && !connection.isClosed()) {
       connection.close();
-      System.out.println("Disconnected from MySQL database.");
+     // System.out.println("Disconnected from MySQL database.");
     }
   }
 

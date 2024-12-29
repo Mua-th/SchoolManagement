@@ -1,4 +1,5 @@
 import org.example.config.Database;
+import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
 import org.example.models.note.StudentGradeId;
 import org.example.repositories.StudentGradeRepo;
@@ -58,7 +59,7 @@ public class StudentGradeRepoTest {
 
   @Test
   public void testSaveStudentGrade() throws SQLException {
-    StudentGradeId studentGradeId = new StudentGradeId("123", "MATH101", "Exam");
+    StudentGradeId studentGradeId = new StudentGradeId("123", "MATH101", EvaluationModality.EXAM);
     StudentGrade studentGrade = new StudentGrade(studentGradeId, 15.0);
 
 

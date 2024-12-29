@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class StudentGradeId implements Serializable {
   private String studentId;
   private String moduleElementCode;
-  private String evaluationModality;
+  private EvaluationModality evaluationModality;
 
 
-  public StudentGradeId(String studentId, String moduleElementCode, String evaluationModality) {
+  public StudentGradeId(String studentId, String moduleElementCode, EvaluationModality evaluationModality) {
     this.studentId = studentId;
     this.moduleElementCode = moduleElementCode;
     this.evaluationModality = evaluationModality;
@@ -30,11 +30,11 @@ public class StudentGradeId implements Serializable {
     this.moduleElementCode = moduleElementCode;
   }
 
-  public String getEvaluationModality() {
+  public EvaluationModality getEvaluationModality() {
     return evaluationModality;
   }
 
-  public void setEvaluationModality(String evaluationModality) {
+  public void setEvaluationModality(EvaluationModality evaluationModality) {
     this.evaluationModality = evaluationModality;
   }
 
