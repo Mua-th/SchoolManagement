@@ -50,4 +50,10 @@ public class ModuleElement {
   public void setEvaluationModality(EvaluationModality evaluationModality) {
     this.evaluationModality = evaluationModality;
   }
+
+  public ModuleElement(String code, double coefficient, Module parentModule) {
+    this.code = code;
+    this.coefficient = coefficient;
+    this.parentModule = parentModule;
+  }
 }

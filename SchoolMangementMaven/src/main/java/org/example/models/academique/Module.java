@@ -18,12 +18,11 @@ public class Module {
   }
 
   // Constructeur avec tous les attributs
-  public Module(String code, String name, Filiere filiere, Semester semester, List<ModuleElement> moduleElements) {
+  public Module(String code, String name , Semester semester, Filiere filiere) {
     this.code = code;
     this.name = name;
     this.filiere = filiere;
     this.semester = semester;
-    this.moduleElements = moduleElements;
   }
 
   // Constructeur avec tous les attributs
