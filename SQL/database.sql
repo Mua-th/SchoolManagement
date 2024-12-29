@@ -43,16 +43,15 @@ CREATE TABLE Students (
 
 -- Table: StudentGrade
 CREATE TABLE StudentGrade (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     studentId VARCHAR(36),
     moduleElementCode VARCHAR(10),
     modality ENUM('Exam', 'Project', 'Assignment') NOT NULL,
     grade DOUBLE,
     isAbsent BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (studentId, moduleElementCode, modality),
     FOREIGN KEY (studentId) REFERENCES Students(id) ON DELETE CASCADE,
     FOREIGN KEY (moduleElementCode) REFERENCES ModuleElement(code) ON DELETE CASCADE
 );
-
 -- Table: ProfessorFiliere
 CREATE TABLE ProfessorFiliere (
     professorId VARCHAR(36),
@@ -103,7 +102,7 @@ INSERT INTO Students (id, firstName, lastName) VALUES
 INSERT INTO StudentGrade (studentId, moduleElementCode, modality, grade, isAbsent) VALUES
 ('stu-1', 'CS101-1', 'Exam', 85.0, FALSE),
 ('stu-1', 'CS101-2', 'Project', 90.0, FALSE),
-('stu-2', 'EE101-1', 'Exam', NULL, TRUE);  -- Absent for this grade
+('stu-2', 'EE101-1', 'Exam', NULL, TRUE);
 
 -- ProfessorFiliere
 INSERT INTO ProfessorFiliere (professorId, filiereCode) VALUES
