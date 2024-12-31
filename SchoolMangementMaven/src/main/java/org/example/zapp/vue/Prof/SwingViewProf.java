@@ -218,6 +218,21 @@ public class SwingViewProf implements ViewProfInterface {
   }
 
   @Override
+  public String getModuleElementCodeForValidation() {
+    return null;
+  }
+
+  @Override
+  public String getFilePathForExport() {
+    return null;
+  }
+
+  @Override
+  public String getModuleElementCodeForExport() {
+    return null;
+  }
+
+  @Override
   public void renderMenu(List<String> options) {
     StringBuilder sb = new StringBuilder("Menu:\n");
     for (String option : options) {

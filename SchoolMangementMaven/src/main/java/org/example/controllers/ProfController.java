@@ -16,6 +16,7 @@ import org.example.zapp.AppState;
 import org.example.zapp.vue.Prof.ViewProf;
 import org.example.zapp.vue.Prof.ViewProfInterface;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -69,11 +70,44 @@ public class ProfController {
       case "4":
         logoutController.handleLogout();
         break;
+      case "5":
+        handleValidateModuleElement();
+        break;
+      case "6":
+        handleExportGrades();
+        break;
+
       default:
         viewProf.displayMessage("Invalid choice. Please try again.");
     }
   }
 
+
+  public void handleValidateModuleElement() {
+    try {
+      String moduleElementCode = viewProf.getModuleElementCodeForValidation();
+      boolean isValidated = moduleElementService.validateModuleElement(moduleElementCode);
+      if (isValidated) {
+        viewProf.displayMessage("Module element validated successfully.");
+      } else {
+        viewProf.displayMessage("Failed to validate module element.");
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void handleExportGrades() {
+    try {
+      String moduleElementCode = viewProf.getModuleElementCodeForExport();
+      String filePath = viewProf.getFilePathForExport();
+      studentGradeService.exportGradesToExcel(moduleElementCode, filePath);
+      viewProf.displayMessage("Grades exported successfully.");
+    } catch (SQLException | IOException e) {
+      e.printStackTrace();
+      viewProf.displayMessage("Failed to export grades.");
+    }
+  }
   public Student handleFindStudentById() {
     try {
       String studentId = viewProf.findStudentByIdForm();

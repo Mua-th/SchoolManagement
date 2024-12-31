@@ -31,7 +31,7 @@ public class ViewProf extends View  implements ViewProfInterface  , Observer {
 
   @Override
   public void displayMenuProf() {
-    renderMenu(Arrays.asList("View Module Elements", "Insert Student Grades" , "FindStudentById", "Logout"));
+    renderMenu(Arrays.asList("View Module Elements", "Insert Student Grades" , "FindStudentById", "Logout" , "Valider les notes d'un élément" , "Exporter les notes d'un élément"));
   }
 
   @Override
@@ -129,7 +129,6 @@ public class ViewProf extends View  implements ViewProfInterface  , Observer {
 
 
 
-
   @Override
   public Student handleSubscribedStudentSelection(List<Student> students){
     Scanner scanner = new Scanner(System.in);
@@ -184,6 +183,28 @@ public class ViewProf extends View  implements ViewProfInterface  , Observer {
 
     }
     return studentGrades;
+  }
+
+
+  @Override
+  public String getModuleElementCodeForValidation() {
+    System.out.print("Enter module element code to validate: ");
+    Scanner scanner = new Scanner(System.in);
+    return scanner.nextLine();
+  }
+
+  @Override
+  public String getModuleElementCodeForExport() {
+    System.out.print("Enter module element code to export grades: ");
+    Scanner scanner = new Scanner(System.in);
+    return scanner.nextLine();
+  }
+
+  @Override
+  public String getFilePathForExport() {
+    System.out.print("Enter file path to export grades: ");
+    Scanner scanner = new Scanner(System.in);
+    return scanner.nextLine();
   }
 
   @Override

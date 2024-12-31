@@ -13,8 +13,17 @@ import java.util.List;
 
 public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao {
 
-  public ModuleElementDaoImpl() {
+  private ModuleElementDaoImpl() {
     super(myDatabase);
+  }
+
+  private static ModuleElementDaoImpl instance;
+
+  public static ModuleElementDaoImpl getInstance() {
+    if (instance == null) {
+      instance = new ModuleElementDaoImpl();
+    }
+    return instance;
   }
 
   @Override
@@ -101,8 +110,17 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
 
   @Override
   public boolean update(ModuleElement moduleElement) throws SQLException {
-    if (delete(moduleElement.getCode())) {
-      return save(moduleElement);
+    String query = "UPDATE ModuleElement SET coefficient = ?, isValidated = ?, moduleCode = ? WHERE code = ?";
+    try (Connection connection = myDatabase.connect();
+         PreparedStatement stmt = connection.prepareStatement(query)) {
+      stmt.setDouble(1, moduleElement.getCoefficient());
+      stmt.setBoolean(2, moduleElement.isValidated());
+      stmt.setString(3, moduleElement.getParentModule().getCode());
+      stmt.setString(4, moduleElement.getCode());
+      int rowsUpdated = stmt.executeUpdate();
+      return rowsUpdated > 0;
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
     return false;
   }

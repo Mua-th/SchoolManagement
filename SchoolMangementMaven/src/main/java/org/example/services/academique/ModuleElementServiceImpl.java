@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ModuleElementServiceImpl implements ModuleElementService {
-    private final ModuleElementDao moduleElementDao = new ModuleElementDaoImpl();
+    private final ModuleElementDao moduleElementDao = ModuleElementDaoImpl.getInstance();
 
     @Override
     public ModuleElement getModuleElementById(String code) throws SQLException {
@@ -20,6 +20,8 @@ public class ModuleElementServiceImpl implements ModuleElementService {
     public List<ModuleElement> getAllModuleElements() throws SQLException {
         return moduleElementDao.findAll();
     }
+
+
 
     @Override
     public boolean createModuleElement(ModuleElement moduleElement) throws SQLException {
@@ -41,6 +43,16 @@ public class ModuleElementServiceImpl implements ModuleElementService {
     public List<ModuleElement> getModuleElementsByProfId(String professorId) throws SQLException {
         // Implement logic to get all ModuleElements by professor ID
         return moduleElementDao.findAllByProfId(professorId);
+    }
+
+    @Override
+    public boolean validateModuleElement(String moduleElementCode) throws SQLException {
+        ModuleElement moduleElement = moduleElementDao.findById(moduleElementCode);
+        if (moduleElement != null) {
+            moduleElement.setValidated(true);
+            return moduleElementDao.update(moduleElement);
+        }
+        return false;
     }
 
     @Override

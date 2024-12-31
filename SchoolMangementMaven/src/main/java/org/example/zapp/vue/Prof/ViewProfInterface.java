@@ -36,4 +36,10 @@ public interface ViewProfInterface extends ViewInterface {
   EvaluationModality getChosenModality();
 
   List<StudentGrade> handleInserStudentGradeForModality(ModuleElement selectedModuleElement, List<Student> subscribedStudents, EvaluationModality evaluationModality);
+
+  String getModuleElementCodeForValidation();
+
+  String getFilePathForExport();
+
+  public abstract String getModuleElementCodeForExport();
 }
