@@ -7,19 +7,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.config.Database;
 import org.example.config.MySQLDatabase;
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
 import org.example.models.academique.Semester;
-public class ModuleDaoImplhouda {
+import org.example.repositories.SuperRepo;
 
-    private final MySQLDatabase database = MySQLDatabase.getInstance();
+public class ModuleDaoImplhouda extends SuperRepo implements ModuleDaoHouda{
+
+
     private static ModuleDaoImplhouda instance;
 
-    private ModuleDaoImplhouda() {
+    public ModuleDaoImplhouda() {
+        super(myDatabase);
     }
 
-    public static ModuleDaoImpl getInstance() {
+
+    public static ModuleDaoImplhouda getInstance() {
         if (instance == null) {
             instance = new ModuleDaoImplhouda();
         }
@@ -31,7 +37,7 @@ public class ModuleDaoImplhouda {
         String query = "SELECT * FROM module WHERE code = ?";
 
         try {
-            Connection conn = this.database.connect();
+            Connection conn = myDatabase.connect();
 
             Module var6;
             label114: {
@@ -128,7 +134,7 @@ public class ModuleDaoImplhouda {
         String query = "SELECT * FROM module m JOIN filiere f ON m.filiereCode = f.code";
 
         try {
-            Connection connection = this.database.connect();
+            Connection connection = myDatabase.connect();
 
             try {
                 PreparedStatement stmt = connection.prepareStatement(query);
@@ -218,7 +224,7 @@ public class ModuleDaoImplhouda {
             String query = "INSERT INTO module (code, name, semester, filiereCode) VALUES (?, ?, ?, ?)";
 
             try {
-                Connection conn = this.database.connect();
+                Connection conn = myDatabase.connect();
 
                 try {
                     PreparedStatement stmt = conn.prepareStatement(query);
@@ -227,10 +233,9 @@ public class ModuleDaoImplhouda {
                         if (conn == null) {
                             throw new SQLException("Database connection is null.");
                         }
-
                         stmt.setString(1, module.getCode());
                         stmt.setString(2, module.getName());
-                        stmt.setString(3, module.getSemester().getDatabaseValue());
+                        stmt.setString(3, module.getSemester().toString());
                         stmt.setString(4, module.getFiliere().getCode());
                         stmt.executeUpdate();
                     } catch (Throwable var10) {
@@ -275,11 +280,9 @@ public class ModuleDaoImplhouda {
         String query = "UPDATE module SET name = ?, semester = ?, filiereCode = ? WHERE code = ?";
 
         try {
-            Connection conn = this.database.connect();
-
+            Connection conn = myDatabase.connect();
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
-
                 try {
                     stmt.setString(1, module.getName());
                     stmt.setString(2, module.getSemester().name());
@@ -294,7 +297,6 @@ public class ModuleDaoImplhouda {
                             var9.addSuppressed(var8);
                         }
                     }
-
                     throw var9;
                 }
 
@@ -327,7 +329,7 @@ public class ModuleDaoImplhouda {
         String query = "DELETE FROM module WHERE code = ?";
 
         try {
-            Connection conn = this.database.connect();
+            Connection conn = myDatabase.connect();
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -387,7 +389,7 @@ public class ModuleDaoImplhouda {
 
     private Filiere findFiliereByCode(String filiereCode) throws SQLException {
         String query = "SELECT * FROM filiere WHERE code = ?";
-        Connection conn = this.database.connect();
+        Connection conn = myDatabase.connect();
 
         Filiere var7;
         label95: {
@@ -478,7 +480,7 @@ public class ModuleDaoImplhouda {
     private void ensureFiliereExists(Module module) throws SQLException {
         if (module.getFiliere() != null && module.getFiliere().getCode() != null) {
             String query = "SELECT COUNT(*) FROM filiere WHERE code = ?";
-            Connection conn = this.database.connect();
+            Connection conn = myDatabase.connect();
 
             try {
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -547,7 +549,7 @@ public class ModuleDaoImplhouda {
         String query = "SELECT DISTINCT semester FROM module";
 
         try {
-            Connection conn = this.database.connect();
+            Connection conn = myDatabase.connect();
 
             try {
                 Statement stmt = conn.createStatement();
@@ -616,7 +618,7 @@ public class ModuleDaoImplhouda {
         List<Filiere> filieres = new ArrayList();
 
         try {
-            Connection connection = this.database.connect();
+            Connection connection = myDatabase.connect();
 
             try {
                 Statement statement = connection.createStatement();

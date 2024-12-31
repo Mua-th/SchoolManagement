@@ -47,6 +47,8 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     return moduleElements;
   }
 
+
+
   @Override
   public boolean save(ModuleElement moduleElement) throws SQLException {
     String query = "INSERT INTO ModuleElement (code, coefficient, isValidated, moduleCode) VALUES (?, ?, ?, ?)";
@@ -131,6 +133,9 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return students;
   }
+
+
+
   private ModuleElement mapResultSetToModuleElement(ResultSet rs) throws SQLException {
     ModuleElement moduleElement = new ModuleElement();
     moduleElement.setCode(rs.getString("code"));

@@ -1,5 +1,6 @@
 package org.example.vue.ElementVue;
 
+import org.example.models.academique.Module;
 import org.example.models.academique.ModuleElement;
 import org.example.services.user.ElementService.ElementService;
 
@@ -79,7 +80,7 @@ public class ElementViewImpl implements ElementView{
         this.scanner.nextLine();
         System.out.print("Code du module : ");
         String moduleCode = this.scanner.nextLine();
-        ModuleElement newElement = new ModuleElement(code, coefficient, moduleCode);
+        ModuleElement newElement = new ModuleElement(code, coefficient, false ,new Module( moduleCode));
         this.service.addElement(newElement);
         System.out.println("Élément ajouté avec succès !");
     }
@@ -95,7 +96,7 @@ public class ElementViewImpl implements ElementView{
         this.scanner.nextLine();
         System.out.print("Nouveau code du module : ");
         String moduleCode = this.scanner.nextLine();
-        ModuleElement updatedElement = new ModuleElement(code, coefficient, isValidated, moduleCode);
+        ModuleElement updatedElement = new ModuleElement(code, coefficient, isValidated, new Module( moduleCode ));
         this.service.modifyElement(updatedElement);
         System.out.println("Élément mis à jour avec succès !");
     }

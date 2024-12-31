@@ -10,7 +10,8 @@ import java.util.List;
 public class ElementServiceImpl implements ElementService {
     private final ElementDao moduleElementDao;
 
-    public ElementServiceImpl(ModuleElementDao moduleElementDao) {
+    public ElementServiceImpl(ElementDao moduleElementDao) {
+
         this.moduleElementDao = moduleElementDao;
     }
 

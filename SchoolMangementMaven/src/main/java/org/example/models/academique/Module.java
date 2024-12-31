@@ -15,6 +15,10 @@ public class Module {
   public Module() {
   }
 
+  public Module(String code) {
+    this.code = code;
+  }
+
   // Constructeur avec tous les attributs
   public Module(String code, String name , Semester semester, Filiere filiere) {
     this.code = code;

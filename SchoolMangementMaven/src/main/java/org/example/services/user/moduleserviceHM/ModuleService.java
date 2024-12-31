@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ModuleService {
 
-        org.example.models.academique.Module getModuleByCode(String var1);
+        Module getModuleByCode(String var1);
 
-        List<org.example.models.academique.Module> getAllModules();
+        List<Module> getAllModules();
 
-        void addModule(org.example.models.academique.Module var1);
+        void addModule(Module var1);
 
         void updateModule(Module var1);
 

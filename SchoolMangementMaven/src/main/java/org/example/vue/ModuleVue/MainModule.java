@@ -1,7 +1,11 @@
 package org.example.vue.ModuleVue;
 
+import org.example.config.Database;
 import org.example.config.MySQLDatabase;
-import org.example.dao.ModuleDaoImpl;
+import org.example.dao.ModuleDaoHouda;
+
+import org.example.dao.ModuleDaoImplhouda;
+import org.example.repositories.SuperRepo;
 import org.example.services.user.moduleserviceHM.ModuleService;
 import org.example.services.user.moduleserviceHM.ModuleServiceImpl;
 import java.util.Scanner;
@@ -9,9 +13,10 @@ import java.util.Scanner;
 public class MainModule {
 
     public static void main(String[] args) {
-        MySQLDatabase database = MySQLDatabase.getInstance();
-        ModuleDaoImpl moduleDao = ModuleDaoImpl.getInstance();
-        ModuleService moduleService = new ModuleServiceImpl(moduleDao);
+        SuperRepo.getInstance(Database.getInstance());
+        MySQLDatabase database = (MySQLDatabase) Database.getInstance();
+        ModuleDaoImplhouda moduleDao = ModuleDaoImplhouda.getInstance();
+        ModuleService moduleService = new ModuleServiceImpl((ModuleDaoHouda) moduleDao);
         ModuleView moduleView = new ModuleViewImpl(moduleService);
         Scanner scanner = new Scanner(System.in);
 

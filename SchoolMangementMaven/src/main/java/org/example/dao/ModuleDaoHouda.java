@@ -8,7 +8,7 @@ import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
 import org.example.models.academique.Semester;
 
-public interface moduledaoHouda {
+public interface ModuleDaoHouda {
     Module findByCode(String var1);
 
     List<Module> findAll();

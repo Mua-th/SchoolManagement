@@ -1,15 +1,15 @@
 package org.example.services.user.moduleserviceHM;
 
-import org.example.dao.ModuleDao;
+import org.example.dao.ModuleDaoHouda;
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
 import org.example.models.academique.Semester;
 import java.util.List;
 
 public class ModuleServiceImpl implements ModuleService {
-    private final ModuleDao moduleDao;
+    private final ModuleDaoHouda moduleDao;
 
-    public ModuleServiceImpl(ModuleDao moduleDao) {
+    public ModuleServiceImpl(ModuleDaoHouda moduleDao) {
         this.moduleDao = moduleDao;
     }
 

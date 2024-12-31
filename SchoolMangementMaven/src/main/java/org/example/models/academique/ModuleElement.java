@@ -8,8 +8,21 @@ public class ModuleElement {
   private String code;
   private Module parentModule;
   private double coefficient;
+
+  private boolean isValidated;
   private Professor responsibleProfessor;
   private EvaluationModality evaluationModality;
+
+  public boolean isValidated() {
+    return isValidated;
+  }
+
+  public ModuleElement() {
+  }
+
+  public void setValidated(boolean validated) {
+    isValidated = validated;
+  }
 
   public String getCode() {
     return code;
@@ -51,9 +64,10 @@ public class ModuleElement {
     this.evaluationModality = evaluationModality;
   }
 
-  public ModuleElement(String code, double coefficient, Module parentModule) {
+  public ModuleElement(String code, double coefficient , boolean isValidated, Module parentModule) {
     this.code = code;
     this.coefficient = coefficient;
     this.parentModule = parentModule;
+    this.isValidated = isValidated;
   }
 }

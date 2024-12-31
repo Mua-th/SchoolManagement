@@ -13,6 +13,10 @@ public Filiere(String code, String name) {
   this.name = name;
   this.modules = new ArrayList<>();
   }
+
+  public Filiere() {
+
+  }
   // Getters and Setters
   public String getCode() {
     return code;
