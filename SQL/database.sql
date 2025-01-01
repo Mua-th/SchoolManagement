@@ -38,7 +38,9 @@ CREATE TABLE ModuleElement (
 CREATE TABLE Students (
     id VARCHAR(36) PRIMARY KEY,
     firstName VARCHAR(50) NOT NULL,
-    lastName VARCHAR(50) NOT NULL
+    lastName VARCHAR(50) NOT NULL,
+    filiereCode VARCHAR(10) NOT NULL,
+    FOREIGN KEY (filiereCode) REFERENCES Filiere(code)
 );
 
 -- Table: StudentGrade
@@ -69,46 +71,3 @@ CREATE TABLE ProfessorModuleElement (
     FOREIGN KEY (professorId) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (moduleElementCode) REFERENCES ModuleElement(code) ON DELETE CASCADE
 );
-
--- Seed data
-
--- Users
-INSERT INTO Users (id, login, password, firstName, lastName, role) VALUES
-('admin-1', 'admin', 'admin123', 'Alice', 'Smith', 'Administrator'),
-('prof-1', 'prof1', 'prof123', 'Bob', 'Jones', 'Professor');
-
--- Filiere
-INSERT INTO Filiere (code, name) VALUES
-('CS', 'Computer Science'),
-('EE', 'Electrical Engineering');
-
--- Module
-INSERT INTO Module (code, name, semester, filiereCode) VALUES
-('CS101', 'Programming Basics', 'semestre 1', 'CS'),
-('EE101', 'Circuits', 'semestre 2', 'EE');
-
--- ModuleElement
-INSERT INTO ModuleElement (code, coefficient, isValidated, moduleCode) VALUES
-('CS101-1', 1.0, FALSE, 'CS101'),
-('CS101-2', 0.5, FALSE, 'CS101'),
-('EE101-1', 1.5, FALSE, 'EE101');
-
--- Students
-INSERT INTO Students (id, firstName, lastName) VALUES
-('stu-1', 'Charlie', 'Brown'),
-('stu-2', 'Dana', 'White');
-
--- StudentGrade
-INSERT INTO StudentGrade (studentId, moduleElementCode, modality, grade, isAbsent) VALUES
-('stu-1', 'CS101-1', 'Exam', 85.0, FALSE),
-('stu-1', 'CS101-2', 'Project', 90.0, FALSE),
-('stu-2', 'EE101-1', 'Exam', NULL, TRUE);
-
--- ProfessorFiliere
-INSERT INTO ProfessorFiliere (professorId, filiereCode) VALUES
-('prof-1', 'CS');
-
--- ProfessorModuleElement
-INSERT INTO ProfessorModuleElement (professorId, moduleElementCode) VALUES
-('prof-1', 'CS101-1'),
-('prof-1', 'CS101-2');
