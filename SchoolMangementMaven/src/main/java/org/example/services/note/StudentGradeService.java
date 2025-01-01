@@ -73,6 +73,12 @@ public class StudentGradeService implements StudentGradeServiceInterface {
   }
 
   public boolean save(StudentGrade studentGrade) throws SQLException {
+    //check if the grade is between 0 and 20
+
+    if (studentGrade.getGrade() < 0 || studentGrade.getGrade() > 20) {
+      throw new IllegalArgumentException("Grade must be between 0 and 20.");
+    }
+
     return studentGradeRepo.save(studentGrade);
   }
 
@@ -93,9 +99,7 @@ public class StudentGradeService implements StudentGradeServiceInterface {
   }
   @Override
   public void exportGradesToExcel(String moduleElementCode, String filePath) throws SQLException, IOException {
-
-    //check if the module element is validated
-
+    // Check if the module element is validated
     ModuleElement moduleElement = moduleElementDao.findById(moduleElementCode);
     if (moduleElement == null || !moduleElement.isValidated()) {
       throw new IllegalArgumentException("Module element is not validated.");
@@ -114,14 +118,18 @@ public class StudentGradeService implements StudentGradeServiceInterface {
       row.createCell(3).setCellValue(grade.getGrade());
     }
 
+    // Ensure the file path includes the file name and extension
+    if (!filePath.endsWith(".xlsx")) {
+      filePath += ".xlsx";
+    }
+
     try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
       workbook.write(outputStream);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
     workbook.close();
-  }
-  public boolean saveForAllModalities(String studentId, String moduleElementCode, double examGrade , double TpGrade , double projectGrade) throws SQLException {
+  }  public boolean saveForAllModalities(String studentId, String moduleElementCode, double examGrade , double TpGrade , double projectGrade) throws SQLException {
 
     StudentGrade examStudentGrade = new StudentGradeBuilder().studentGradeId(
       new StudentGradeId(studentId, moduleElementCode, EvaluationModality.EXAM)).grade(examGrade).build();

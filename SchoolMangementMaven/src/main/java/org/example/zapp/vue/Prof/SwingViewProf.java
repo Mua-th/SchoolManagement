@@ -1,7 +1,5 @@
 package org.example.zapp.vue.Prof;
 
-import org.example.controllers.LogoutController;
-import org.example.controllers.ProfController;
 import org.example.models.academique.ModuleElement;
 import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
@@ -18,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
-public class SwingViewProf implements ViewProfInterface {
+public class SwingViewProf extends Observable implements ViewProfInterface {
   private JPanel panel;
   private JTextArea textArea;
   private JTextField inputField;
@@ -27,8 +25,6 @@ public class SwingViewProf implements ViewProfInterface {
   private JButton findStudentByIdButton;
   private JButton logoutButton;
   private static SwingViewProf instance;
-
-  private LogoutController logoutController;
 
   public SwingViewProf() {
     panel = new JPanel();
@@ -40,17 +36,14 @@ public class SwingViewProf implements ViewProfInterface {
     textArea.setMargin(new Insets(10, 10, 10, 10));
     panel.add(new JScrollPane(textArea), BorderLayout.CENTER);
 
-    inputField = new JTextField();
-    inputField.setFont(new Font("Arial", Font.PLAIN, 14));
-    panel.add(inputField, BorderLayout.SOUTH);
-
     JPanel buttonPanel = new JPanel();
-    buttonPanel.setLayout(new GridLayout(1, 4));
+    buttonPanel.setLayout(new GridLayout(1, 4, 10, 10));
+    buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    viewModuleElementsButton = new JButton("View Module Elements");
-    insertStudentGradesButton = new JButton("Insert Student Grades");
-    findStudentByIdButton = new JButton("Find Student By ID");
-    logoutButton = new JButton("Logout");
+    viewModuleElementsButton = createStyledButton("View Module Elements");
+    insertStudentGradesButton = createStyledButton("Insert Student Grades");
+    findStudentByIdButton = createStyledButton("Find Student By ID");
+    logoutButton = createStyledButton("Logout");
 
     buttonPanel.add(viewModuleElementsButton);
     buttonPanel.add(insertStudentGradesButton);
@@ -63,28 +56,46 @@ public class SwingViewProf implements ViewProfInterface {
       @Override
       public void actionPerformed(ActionEvent e) {
 
+        setChanged();
+        notifyObservers("viewModuleElements");
       }
     });
 
     insertStudentGradesButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-
-        }
+        setChanged();
+        notifyObservers("insertStudentGrades");
+      }
     });
 
     findStudentByIdButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+
+        setChanged();
+        notifyObservers("findStudentById");
+
       }
     });
 
     logoutButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-
+        setChanged();
+        notifyObservers("logout");
       }
     });
+  }
+
+  private JButton createStyledButton(String text) {
+    JButton button = new JButton(text);
+    button.setFont(new Font("Arial", Font.BOLD, 14));
+    button.setBackground(new Color(70, 130, 180));
+    button.setForeground(Color.WHITE);
+    button.setFocusPainted(false);
+    button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+    return button;
   }
 
   public static SwingViewProf getInstance() {
@@ -97,7 +108,6 @@ public class SwingViewProf implements ViewProfInterface {
     }
     return instance;
   }
-
 
   @Override
   public void displayMenuProf() {
@@ -118,7 +128,7 @@ public class SwingViewProf implements ViewProfInterface {
     double grade = Double.parseDouble(gradeStr);
 
     return new StudentGradeBuilder()
-      .studentGradeId(new StudentGradeId(studentId, moduleElementCode, EvaluationModality.valueOf(modality)))
+      .studentGradeId(new StudentGradeId(studentId, moduleElementCode, EvaluationModality.valueOf(modality.toUpperCase())))
       .grade(grade)
       .build();
   }
@@ -219,17 +229,17 @@ public class SwingViewProf implements ViewProfInterface {
 
   @Override
   public String getModuleElementCodeForValidation() {
-    return null;
+    return JOptionPane.showInputDialog(MainFrame.getInstance(), "Enter module element code to validate:");
   }
 
   @Override
   public String getFilePathForExport() {
-    return null;
+    return JOptionPane.showInputDialog(MainFrame.getInstance(), "Enter file path to export grades:");
   }
 
   @Override
   public String getModuleElementCodeForExport() {
-    return null;
+    return JOptionPane.showInputDialog(MainFrame.getInstance(), "Enter module element code to export grades:");
   }
 
   @Override

@@ -1,4 +1,6 @@
-package org.example.zapp.vue;
+package org.example.zapp.vue.Login;
+
+import org.example.zapp.vue.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;

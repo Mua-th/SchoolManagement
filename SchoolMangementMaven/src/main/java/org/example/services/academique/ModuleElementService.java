@@ -16,7 +16,7 @@ public interface ModuleElementService {
   List<ModuleElement> getModuleElementsByProfId(String professorId) throws SQLException; // New method
 
 
-  boolean validateModuleElement(String moduleElementCode) throws SQLException;
+  boolean validateModuleElement(String moduleElementCode) throws Exception;
 
   List<Student> getSubscribedStudents(ModuleElement selectedmoduleElement) throws SQLException;
 }

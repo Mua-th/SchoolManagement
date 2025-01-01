@@ -3,17 +3,12 @@ package org.example.controllers;
 import org.example.models.academique.ModuleElement;
 import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
-import org.example.models.note.StudentGradeBuilder;
 import org.example.models.note.StudentGradeId;
 import org.example.models.users.Student.Student;
-import org.example.repositories.StudentGradeRepo;
 import org.example.services.academique.ModuleElementService;
-import org.example.services.academique.ModuleElementServiceImpl;
 import org.example.services.note.StudentGradeService;
 import org.example.services.user.StudentService;
 import org.example.zapp.AppState;
-
-import org.example.zapp.vue.Prof.ViewProf;
 import org.example.zapp.vue.Prof.ViewProfInterface;
 
 import java.io.IOException;
@@ -21,40 +16,26 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ProfController {
+public class ProfController implements Observer {
 
   private final ModuleElementService moduleElementService;
-  private final StudentGradeService studentGradeService ;
-
-  private ViewProfInterface viewProf ;
-  LogoutController logoutController;
-
-  StudentService studentService ;
-
-
-  public ProfController() {
-    this.moduleElementService = new ModuleElementServiceImpl();
-    this.studentGradeService = StudentGradeService.getInstance();
-    logoutController = new LogoutController(AppState.getInstance());
-
-  }
-
+  private final StudentGradeService studentGradeService;
+  private final StudentService studentService;
+  private final ViewProfInterface viewProf;
+  private final LogoutController logoutController;
 
   public ProfController(ModuleElementService moduleElementService, StudentGradeService studentGradeService, StudentService studentService, AppState appState, ViewProfInterface viewProf) {
     this.moduleElementService = moduleElementService;
     this.studentGradeService = studentGradeService;
     this.studentService = studentService;
     this.logoutController = new LogoutController(appState);
-    this.viewProf = viewProf ;
+    this.viewProf = viewProf;
   }
 
-
-
   public void handleInput() {
-   // Scanner scanner = new Scanner(System.in);
-
     String choice = viewProf.getUserChoice();
 
     switch (choice) {
@@ -64,7 +45,7 @@ public class ProfController {
       case "2":
         handleInsertStudentGrade();
         break;
-        case "3":
+      case "3":
         handleFindStudentById();
         break;
       case "4":
@@ -76,12 +57,10 @@ public class ProfController {
       case "6":
         handleExportGrades();
         break;
-
       default:
         viewProf.displayMessage("Invalid choice. Please try again.");
     }
   }
-
 
   public void handleValidateModuleElement() {
     try {
@@ -92,8 +71,8 @@ public class ProfController {
       } else {
         viewProf.displayMessage("Failed to validate module element.");
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    }  catch (Exception e) {
+      viewProf.displayMessage(e.getMessage());
     }
   }
 
@@ -108,70 +87,70 @@ public class ProfController {
       viewProf.displayMessage("Failed to export grades.");
     }
   }
-  public Student handleFindStudentById() {
+
+  public void handleFindStudentById() {
     try {
       String studentId = viewProf.findStudentByIdForm();
-     // System.out.println("studentId: " + studentId + "profId: " + AppState.getUser().getId());
-      Student student = studentService.findByIdForProf(AppState.getUser().getId() , studentId);
+      Student student = studentService.findByIdForProf(AppState.getUser().getId(), studentId);
       if (student != null) {
         viewProf.displayStudent(student);
-        return student;
       } else {
         viewProf.displayMessage("Student not found.");
-        return null;
       }
     } catch (SQLException e) {
       e.printStackTrace();
-      return null;
     }
-
   }
 
   public void handleViewModuleElements() {
     try {
       String professorId = AppState.getUser().getId();
       List<ModuleElement> moduleElements = moduleElementService.getModuleElementsByProfId(professorId);
-       viewProf.displayModuleElements(moduleElements);
-      ModuleElement selectedmoduleElement = viewProf.handleModuleElementSelection(moduleElements);
-      List<Student> students = moduleElementService.getSubscribedStudents(selectedmoduleElement);
-
-      Map<Student,List<StudentGrade>> studentGrades = new HashMap<>() ;
-      for (Student student : students) {
-        studentGrades.put(student, studentGradeService.getStudentGradesByModuleElement(student.getId(), selectedmoduleElement.getCode()));
-      }
-
-      viewProf.displaySubscribedStudentsGrades(selectedmoduleElement, studentGrades);
-
-
-      Student selectedStudent = viewProf.handleSubscribedStudentSelection(students)    ;
-
-     StudentGrade studentGrade = studentGradeService.findById(new StudentGradeId(selectedStudent.getId() , selectedmoduleElement.getCode()  , EvaluationModality.EXAM));
-      viewProf.displayStudentGrade(studentGrade);
+      viewProf.displayModuleElements(moduleElements);
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-
-
   public void handleInsertStudentGrade() {
     try {
-
       viewProf.displayModuleElements(moduleElementService.getModuleElementsByProfId(AppState.getUser().getId()));
       ModuleElement selectedModuleElement = viewProf.handleModuleElementSelection(moduleElementService.getModuleElementsByProfId(AppState.getUser().getId()));
       EvaluationModality evaluationModality = viewProf.getChosenModality();
-      List<StudentGrade> studentGrades = viewProf.handleInserStudentGradeForModality(selectedModuleElement, moduleElementService.getSubscribedStudents(selectedModuleElement), evaluationModality);
-      for (StudentGrade studentGrade : studentGrades) {
-       if( studentGradeService.save(studentGrade)){
-        viewProf.displayMessage("Student grade saved successfully.");
-        }
-       else {
-        viewProf.displayMessage("Failed to save student grade.");
-        }
-      }
+      List<StudentGrade> studentGrades = viewProf.handleInserStudentGradeForModality(
+        selectedModuleElement,
+        moduleElementService.getSubscribedStudents(selectedModuleElement),
+        evaluationModality);
 
-    } catch (SQLException e) {
-      e.printStackTrace();
+      for (StudentGrade studentGrade : studentGrades) {
+        studentGradeService.save(studentGrade);
+      }
+      viewProf.displayMessage("Student grades inserted successfully.");
+    } catch (Exception e) {
+     viewProf.displayMessage(e.getMessage());
+    }
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+    if (arg instanceof String) {
+      String action = (String) arg;
+      switch (action) {
+        case "viewModuleElements":
+          handleViewModuleElements();
+          break;
+        case "insertStudentGrades":
+          handleInsertStudentGrade();
+          break;
+        case "findStudentById":
+          handleFindStudentById();
+          break;
+        case "logout":
+          logoutController.handleLogout();
+          break;
+        default:
+          viewProf.displayMessage("Unknown action: " + action);
+      }
     }
   }
 }
