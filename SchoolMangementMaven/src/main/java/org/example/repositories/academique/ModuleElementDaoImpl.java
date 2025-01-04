@@ -2,6 +2,7 @@ package org.example.repositories.academique;
 
 import org.example.config.Database;
 import org.example.config.MySQLDatabase;
+import org.example.models.academique.Module;
 import org.example.models.academique.ModuleElement;
 import org.example.models.note.StudentGrade;
 import org.example.models.users.Student.Student;
@@ -13,8 +14,17 @@ import java.util.List;
 
 public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao {
 
-  public ModuleElementDaoImpl() {
+  private ModuleElementDaoImpl() {
     super(myDatabase);
+  }
+
+  private static ModuleElementDaoImpl instance;
+
+  public static ModuleElementDaoImpl getInstance() {
+    if (instance == null) {
+      instance = new ModuleElementDaoImpl();
+    }
+    return instance;
   }
 
   @Override
@@ -101,8 +111,17 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
 
   @Override
   public boolean update(ModuleElement moduleElement) throws SQLException {
-    if (delete(moduleElement.getCode())) {
-      return save(moduleElement);
+    String query = "UPDATE ModuleElement SET coefficient = ?, isValidated = ?, moduleCode = ? WHERE code = ?";
+    try (Connection connection = myDatabase.connect();
+         PreparedStatement stmt = connection.prepareStatement(query)) {
+      stmt.setDouble(1, moduleElement.getCoefficient());
+      stmt.setBoolean(2, moduleElement.isValidated());
+      stmt.setString(3, moduleElement.getParentModule().getCode());
+      stmt.setString(4, moduleElement.getCode());
+      int rowsUpdated = stmt.executeUpdate();
+      return rowsUpdated > 0;
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
     return false;
   }
@@ -111,7 +130,7 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
   public List<Student> getStudentsByModuleElement(String moduleElementCode) throws SQLException {
     List<Student> students = new ArrayList<>();
 
-    String query = "SELECT s.* FROM students s " +
+    String query = "SELECT distinct s.* FROM students s " +
       "JOIN studentgrade sg ON s.id = sg.studentId " +
       "WHERE sg.moduleElementCode = ?";
 
@@ -140,6 +159,12 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     ModuleElement moduleElement = new ModuleElement();
     moduleElement.setCode(rs.getString("code"));
     moduleElement.setCoefficient(rs.getDouble("coefficient"));
+
+    moduleElement.setValidated(rs.getBoolean("isValidated"));
+
+    moduleElement.setParentModule(new Module(rs.getString("moduleCode")));
+
+
     // Assuming Module and Professor objects are set elsewhere
     return moduleElement;
   }

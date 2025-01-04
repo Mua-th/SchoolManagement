@@ -158,11 +158,12 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
 
       StudentGrade studentGrade = new StudentGradeBuilder()
         .grade(Double.parseDouble(grade))
-        .studentGradeId(new StudentGradeId(studentId, moduleElementCode, EvaluationModality.valueOf( modality)))
+        .studentGradeId(new StudentGradeId(studentId, moduleElementCode, EvaluationModality.valueOf(modality.toUpperCase())))
         .build();
 
       studentGrades.add(studentGrade);
     }
+    myDatabase.disconnect();
 
     return studentGrades;
   }

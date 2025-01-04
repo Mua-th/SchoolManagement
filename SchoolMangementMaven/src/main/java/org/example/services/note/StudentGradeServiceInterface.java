@@ -5,6 +5,7 @@ import org.example.models.note.StudentGrade;
 import org.example.models.note.StudentGradeId;
 import org.example.services.Service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -16,4 +17,8 @@ public interface StudentGradeServiceInterface extends Service<StudentGrade, Stud
   List<StudentGrade> getStudentGradesByModuleElement(String studentId, String moduleElementCode) throws SQLException;
 
   List<StudentGrade> getStudentGradesByModuleElementAndModality(String studentId, String moduleElementCode, EvaluationModality evaluationModality) throws SQLException;
+
+  boolean updateStudentGrade(StudentGrade studentGrade) throws SQLException;
+
+  void exportGradesToExcel(String moduleElementCode, String filePath) throws SQLException, IOException, IOException;
 }

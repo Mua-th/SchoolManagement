@@ -19,16 +19,18 @@ import org.example.zapp.AppState;
 import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
 import org.example.zapp.vue.Admin.SwingAdminView;
-import org.example.zapp.vue.LoginView;
-import org.example.zapp.vue.LoginViewInterface;
-import org.example.zapp.vue.MainFrame;
+import org.example.zapp.vue.Login.LoginView;
+import org.example.zapp.vue.Login.LoginViewInterface;
 import org.example.zapp.vue.Prof.SwingViewProf;
 import org.example.zapp.vue.Prof.ViewProf;
 import org.example.zapp.vue.Prof.ViewProfInterface;
+
 import org.example.zapp.vue.SwingLoginView;
+import org.example.zapp.vue.Login.SwingLoginView;
 
 
 import java.sql.SQLException;
+import java.util.Observable;
 
 public class Main {
 
@@ -38,21 +40,17 @@ public class Main {
     String guiType = AppState.getGuiType();
     LoginViewInterface loginView;
     ViewProfInterface viewProf;
-    AdminViewInterface adminView ;
-
-    MainFrame mainFrame = MainFrame.getInstance();
+    AdminViewInterface adminView;
 
     if ("swing".equalsIgnoreCase(guiType)) {
       SwingLoginView swingLoginView = new SwingLoginView();
       loginView = swingLoginView;
       SwingViewProf swingViewProf = new SwingViewProf();
       viewProf = swingViewProf;
-      SwingAdminView swingAdminView = new SwingAdminView() ;
-      adminView = swingAdminView ;
+      SwingAdminView swingAdminView = new SwingAdminView();
+      adminView = swingAdminView;
 
-
-
-      swingLoginView.addObserver(new LoginController(new UserService(UserRepository.getInstance()), loginView, viewProf , adminView));
+      swingLoginView.addObserver(new LoginController(new UserService(UserRepository.getInstance()), loginView, viewProf, adminView));
     } else {
       loginView = LoginView.getInstance();
       viewProf = ViewProf.getInstance();
@@ -65,12 +63,11 @@ public class Main {
     while (true) {
       if (AppState.getInstance().isAuthenticated()) {
         if (AppState.getInstance().getUser().getRole().equals(UserRole.Administrator)) {
-          AdminController adminController = new AdminController( adminView);
+          AdminController adminController = new AdminController(adminView);
           adminController.handleInput();
         } else {
           StudentService studentService = StudentServiceImpl.getInstance(StudentDAOImpl.getInstance());
 
-          // Use ProfControllerBuilder to inject dependencies
           ProfController profController = new ProfControllerBuilder()
             .setStudentService(studentService)
             .setModuleElementService(new ModuleElementServiceImpl())
@@ -78,12 +75,16 @@ public class Main {
             .setAppState(AppState.getInstance())
             .setViewProf(viewProf)
             .build();
+
+          if (viewProf instanceof Observable) {
+            ((Observable) viewProf).addObserver(profController);
+          }
+
           profController.handleInput();
         }
       } else {
         loginController.handleLogin();
       }
     }
-
   }
 }
