@@ -1,37 +1,50 @@
 package org.example.services.user.ElementService;
 
-import org.example.dao.ElementDao;
+import org.example.repositories.ElementDAO.ElementDao;
 import org.example.models.academique.ModuleElement;
-import org.example.repositories.academique.ModuleElementDao;
+import org.example.repositories.ElementDAO.ElementDaoImpl;
+
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class ElementServiceImpl implements ElementService {
-    private final ElementDao moduleElementDao;
 
-    public ElementServiceImpl(ElementDao moduleElementDao) {
+    // Instance unique de ElementService (Singleton)
+    private static ElementServiceImpl instance;
+    private ElementDao elementdao = ElementDaoImpl.getInstance();
 
-        this.moduleElementDao = moduleElementDao;
+
+
+
+    // Constructeur privé pour empêcher l'instanciation directe
+    private ElementServiceImpl() {}
+
+    // Méthode pour obtenir l'instance unique de ElementService
+    public static ElementServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new ElementServiceImpl();
+        }
+        return instance;
     }
-
     public void addElement(ModuleElement element) throws SQLException {
-        this.moduleElementDao.add(element);
+        elementdao.add(element);
     }
 
     public List<ModuleElement> getAllElements() throws SQLException {
-        return this.moduleElementDao.findAll();
+        return elementdao.findAll();
     }
 
-    public ModuleElement getElementByCode(String code) throws SQLException {
-        return this.moduleElementDao.findByCode(code);
+    public Optional<ModuleElement> getElementByCode(String code) throws SQLException {
+        return elementdao.findByCode(code);
     }
 
     public void modifyElement(ModuleElement element) throws SQLException {
-        this.moduleElementDao.update(element);
+        elementdao.update(element);
     }
 
     public void removeElement(String code) throws SQLException {
-        this.moduleElementDao.delete(code);
+        elementdao.delete(code);
     }
 }

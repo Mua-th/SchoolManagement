@@ -2,9 +2,9 @@ package org.example.vue.ModuleVue;
 
 import org.example.config.Database;
 import org.example.config.MySQLDatabase;
-import org.example.dao.ModuleDaoHouda;
+import org.example.repositories.ModuleDAO.ModuleDaoHouda;
 
-import org.example.dao.ModuleDaoImplhouda;
+import org.example.repositories.ModuleDAO.ModuleDaoImplhouda;
 import org.example.repositories.SuperRepo;
 import org.example.services.user.moduleserviceHM.ModuleService;
 import org.example.services.user.moduleserviceHM.ModuleServiceImpl;
@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class MainModule {
 
     public static void main(String[] args) {
+        /*
         SuperRepo.getInstance(Database.getInstance());
         MySQLDatabase database = (MySQLDatabase) Database.getInstance();
         ModuleDaoImplhouda moduleDao = ModuleDaoImplhouda.getInstance();
@@ -49,7 +50,7 @@ public class MainModule {
                         System.out.println("Invalid choice! Please try again.");
                 }
             }
-        }
+        }*/
     }
 }
 

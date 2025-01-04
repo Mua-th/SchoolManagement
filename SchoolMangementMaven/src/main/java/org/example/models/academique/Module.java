@@ -33,6 +33,9 @@ public class Module {
     this.name = name;
   }
 
+  public Module(String code, String name, String semester, Module filiereCode) {
+  }
+
   // Getters
   public String getCode() {
     return code;
@@ -56,8 +59,6 @@ public class Module {
     return moduleElements;
   }
 
-
-  // Setters
   public void setCode(String code) {
     this.code = code;
   }
@@ -76,6 +77,17 @@ public class Module {
 
   public void setModuleElements(List<ModuleElement> moduleElements) {
     this.moduleElements = moduleElements;
+  }
+
+  @Override
+  public String toString() {
+    return "Module{" +
+            "code='" + code + '\'' +
+            ", name='" + name + '\'' +
+            ", filiere=" + filiere +
+            ", semester=" + semester +
+            ", moduleElements=" + moduleElements +
+            '}';
   }
 
 

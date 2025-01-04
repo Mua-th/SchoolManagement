@@ -20,7 +20,11 @@ public Filiere(String code, String name) {
   public Filiere() {
 
   }
-  // Getters and Setters
+
+    public Filiere(String filiereCode) {
+    }
+
+    // Getters and Setters
   public String getCode() {
     return code;
   }

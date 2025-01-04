@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class ModuleViewImpl implements ModuleView {
+public class ModuleViewImpl {
+    /*
     private final ModuleService moduleService;
 
     public ModuleViewImpl(ModuleService moduleService) {
@@ -127,5 +128,5 @@ public class ModuleViewImpl implements ModuleView {
             System.out.println("Module not found!");
         }
 
-    }
+    }*/
 }

@@ -1,47 +1,56 @@
 package org.example.services.user.moduleserviceHM;
 
-import org.example.dao.ModuleDaoHouda;
+import org.example.repositories.ModuleDAO.ModuleDaoHouda;
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
 import org.example.models.academique.Semester;
+import org.example.repositories.ModuleDAO.ModuleDaoImplhouda;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class ModuleServiceImpl implements ModuleService {
-    private final ModuleDaoHouda moduleDao;
+    public static ModuleServiceImpl instance;
+    private final ModuleDaoHouda moduleDao= ModuleDaoImplhouda.getInstance();
 
-    public ModuleServiceImpl(ModuleDaoHouda moduleDao) {
-        this.moduleDao = moduleDao;
+    // Constructeur privé pour empêcher l'instanciation directe
+    private ModuleServiceImpl() {}
+
+    // Méthode pour obtenir l'instance unique de ElementService
+    public static ModuleServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new ModuleServiceImpl();
+        }
+        return instance;
     }
 
-    public org.example.models.academique.Module getModuleByCode(String code) {
-        return this.moduleDao.findByCode(code);
+    @Override
+    public Optional<Module> getModuleByCode(String code) throws SQLException {
+        return moduleDao.findByCode(code);
     }
 
-    public List<org.example.models.academique.Module> getAllModules() {
-        return this.moduleDao.findAll();
+    @Override
+    public List<Module> getAllModules() throws SQLException {
+        return moduleDao.findAll();
     }
 
-    public void addModule(org.example.models.academique.Module module) {
+    @Override
+    public void addModule(Module module) throws SQLException {
         if (module.getFiliere() == null) {
             throw new IllegalArgumentException("Module's Filiere cannot be null.");
-        } else {
-            this.moduleDao.save(module);
         }
+        moduleDao.save(module);
     }
 
-    public void updateModule(Module module) {
-        this.moduleDao.update(module);
+    @Override
+    public void updateModule(Module module) throws SQLException {
+        moduleDao.update(module);
     }
 
-    public void deleteModule(String code) {
-        this.moduleDao.delete(code);
+    @Override
+    public void deleteModule(String code) throws SQLException {
+        moduleDao.delete(code);
     }
 
-    public List<Semester> getAllSemesters() {
-        return this.moduleDao.getAllSemesters();
-    }
 
-    public List<Filiere> getAllFilieres() {
-        return this.moduleDao.getAllFilieres();
-    }
 }
