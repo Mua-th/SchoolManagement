@@ -7,9 +7,25 @@ public  class StudentGrade {
   private Double grade;
   private StudentGradeId studentGradeId ;
 
+  private boolean isAbsent;
+
   public StudentGrade(StudentGradeId studentGradeId, double v) {
     this.studentGradeId = studentGradeId;
     this.grade = v;
+  }
+
+  public boolean isAbsent() {
+    return isAbsent;
+  }
+
+  public void setAbsent(boolean absent) {
+    isAbsent = absent;
+  }
+
+  public StudentGrade(StudentGradeId studentGradeId, double v, boolean isAbsent) {
+    this.studentGradeId = studentGradeId;
+    this.grade = v;
+    this.isAbsent = isAbsent;
   }
 
   public StudentGrade() {

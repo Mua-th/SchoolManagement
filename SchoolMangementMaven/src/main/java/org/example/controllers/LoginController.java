@@ -4,9 +4,8 @@ import org.example.models.users.User.User;
 import org.example.models.users.User.UserRole;
 import org.example.services.user.UserService;
 import org.example.zapp.AppState;
-import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
-import org.example.zapp.vue.LoginViewInterface;
+import org.example.zapp.vue.Login.LoginViewInterface;
 import org.example.zapp.vue.Prof.ViewProfInterface;
 
 import java.sql.SQLException;

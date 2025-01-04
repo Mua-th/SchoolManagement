@@ -2,7 +2,11 @@ package org.example.zapp.vue.Admin;
 
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
+
 import org.example.models.academique.ModuleElement;
+
+import org.example.models.users.Student.Student;
+
 
 import java.util.List;
 
@@ -48,6 +52,11 @@ public class SwingAdminView implements  AdminViewInterface{
     }
 
     @Override
+    public String getStudentName() {
+        return "";
+    }
+
+    @Override
     public void afficherFiliere(Filiere filiere) {
 
     }
@@ -59,18 +68,32 @@ public class SwingAdminView implements  AdminViewInterface{
 
     @Override
     public void displayGestionElementMenu() {
+}
+  
+  @Override
+    public void displayGestionetudiantMenu() {
+
 
     }
 
     @Override
-    public ModuleElement ajouterElement() {
+    public ModuleElement ajouterElement() { }
+  
+  @Override
+   public ModuleElement mettreAJourElement() {
+        return null;
+    }
+  
+
+  @Override
+    public Student GetStudent() {
+
         return null;
     }
 
-    @Override
-    public ModuleElement mettreAJourElement() {
-        return null;
-    }
+    
+
+   
 
     @Override
     public String supprimerElement() {
@@ -93,37 +116,59 @@ public class SwingAdminView implements  AdminViewInterface{
     }
 
     @Override
-    public void displayGestionModuleMenu() {
+    public void displayGestionModuleMenu() { }
+    public void afficherStudent(Student student) {
+
 
     }
 
     @Override
-    public Module ajouterModule() {
+
+    public Module ajouterModule() { }
+    public Student mettreAJourStudent() {
+
         return null;
     }
 
     @Override
+
     public Module mettreAJourModule() {
         return null;
     }
 
     @Override
-    public String supprimerModule() {
+    public String supprimerModule() { }
+
+    public String supprimerStudent() {
         return "";
     }
 
     @Override
-    public void afficherModules(List<Module> modules) {
+    public void afficherModules(List<Module> modules) {  }
+
+    public void afficherStudents(List<Student> students) {
+
 
     }
 
     @Override
+
     public String getModulebyCode() {
         return "";
     }
 
     @Override
-    public void afficherModule(Module module) {
+    public void afficherModule(Module module) { }
+
+  
+    @Override
+    public void rechercherStudent(Student s) {
+
+    }
+
+    @Override
+    public void afficherMessageajoutetudiant(boolean b) {
+
 
     }
 }

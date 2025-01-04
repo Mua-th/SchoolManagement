@@ -9,38 +9,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-/*
-public class FiliereService {
-    private final FiliereDAO filiereDAO = FiliereDAOImpl.getInstance();
-
-    public void addFiliere(Filiere filiere, String userId) {
-        filiereDAO.addFiliere(filiere, userId);
-    }
-
-    public void deleteFiliere(String code, String userId) {
-        filiereDAO.deleteFiliere(code, userId);
-    }
-
-    public void updateFiliere(Filiere filiere, String userId) {
-        filiereDAO.updateFiliere(filiere, userId);
-    }
-
-    public List<Filiere> getAllFilieres() {
-        return filiereDAO.getAllFilieres();
-    }
-
-    public Optional<Filiere> getFiliereByCode(String code) {
-        return filiereDAO.getFiliereByCode(code);
-    }
-}*/
 
 
 public class FiliereService implements FiliereServiceInterface{
     // Instance unique de FiliereService (Singleton)
     private static FiliereService instance;
     private FiliereDAO filiereDAO = FiliereDAOImpl.getInstance();
-
-
 
 
     // Constructeur privé pour empêcher l'instanciation directe
