@@ -2,7 +2,7 @@ package org.example.zapp.vue;
 
 import java.util.List;
 
-public class View implements ViewInterface {
+public  class View implements ViewInterface {
   @Override
   public void renderMenu(List<String> options) {
     System.out.println("\nMain Menu:");
@@ -15,4 +15,6 @@ public class View implements ViewInterface {
   public void displayMessage(String message) {
     System.out.println("\n" + message);
   }
+
+
 }

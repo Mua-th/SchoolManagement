@@ -1,4 +1,4 @@
-package org.example.zapp.vue;
+package org.example.zapp.vue.Login;
 
 import java.util.Scanner;
 
