@@ -5,10 +5,7 @@ import org.example.models.academique.ModuleElement;
 import org.example.services.user.ElementService.ElementService;
 
 import java.sql.SQLException;
-import java.util.InputMismatchException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ElementViewImpl implements ElementView{
     private final ElementService service;
@@ -32,8 +29,8 @@ public class ElementViewImpl implements ElementView{
     }
 
     public void displayElementDetails(String code) throws SQLException {
-        ModuleElement element = this.service.getElementByCode(code);
-        if (element != null) {
+        Optional<ModuleElement> element = this.service.getElementByCode(code);
+        if (element.isPresent()) {
             System.out.println("Détails de l'élément : " + element);
         } else {
             System.out.println("Aucun élément trouvé avec le code : " + code);

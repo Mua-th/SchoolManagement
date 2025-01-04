@@ -1,8 +1,11 @@
 package org.example.controllers;
 
 import org.example.models.academique.Filiere;
+import org.example.models.academique.ModuleElement;
+import org.example.services.user.ElementService.ElementServiceImpl;
 import org.example.services.user.FiliereService.FiliereService;
 import org.example.models.academique.Module;
+import org.example.services.user.moduleserviceHM.ModuleServiceImpl;
 import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
 
@@ -33,13 +36,16 @@ public class AdminController {
         handleManageStudents();
         break;
       case "3":
-        handleManagePrograms();
         break;
       case "4":
+        handleGestionModules();
 //        state.setAuthenticated(false);
 //        state.setUsername(null);
 //        state.setCurrentMenu("login");
 //        System.out.println("\nYou have logged out successfully.");
+        break;
+      case "5":
+        handleGestionElements();
         break;
       default:
         System.out.println("\nInvalid choice. Please try again.");
@@ -52,6 +58,16 @@ public class AdminController {
     AdminView.getInstance().displayGestionFiliereMenu();
     String choix = adminView.getUserChoice();
     handleMenuFiliere(choix);
+  }
+  private void handleGestionElements() throws SQLException {
+    AdminView.getInstance().displayGestionElementMenu();
+    String choix = adminView.getUserChoice();
+    handleMenuElement(choix);
+  }
+  private void handleGestionModules() throws SQLException {
+    AdminView.getInstance().displayGestionModuleMenu();
+    String choix = adminView.getUserChoice();
+    handleMenuModule(choix);
   }
 
   public void handleMenuFiliere(String  choix) throws SQLException {
@@ -89,6 +105,7 @@ public class AdminController {
     adminView.afficherModulesParFiliere(modules);
   }
 
+
   private void afficherFilieres() throws SQLException {
     List<Filiere> filieres = FiliereService.getInstance().getAllFilieres();
    adminView.afficherFilieres(filieres);
@@ -116,7 +133,110 @@ public class AdminController {
     Filiere filiere = adminView.ajouterFiliere();
     FiliereService.getInstance().addFiliere(filiere);
   }
+/*Gestion des éléments*/
+  public void handleMenuElement(String  choix) throws SQLException {
+    switch (choix) {
+      case "1":
+        ajouterElement();
+        break;
+      case "2":
+        mettreAJourElement();
+        break;
+      case "3":
+        RechercherElementParCode();
+        break;
+      case "4":
+        supprimerElement();
+        break;
+      case "5":
+        afficherElements();
+        break;
+      case "6":
+        System.out.println("Au revoir !");
+        break;
+      default:
+        System.out.println("Choix invalide, veuillez réessayer.");
+        break;
+    }
+  }
 
+  private void ajouterElement() throws SQLException {
+    ModuleElement element = adminView.ajouterElement();
+    ElementServiceImpl.getInstance().addElement(element);
+  }
+  private void afficherElements() throws SQLException {
+    List<ModuleElement> elements = ElementServiceImpl.getInstance().getAllElements();
+    adminView.afficherElements(elements);
+  }
+  private void RechercherElementParCode() throws SQLException {
+    String code = adminView.getElementbyCode();
+    Optional<ModuleElement> element = ElementServiceImpl.getInstance().getElementByCode(code);
+    if(element.isPresent()){
+      adminView.afficherElement(element.get());
+    }
+  }
+  private void supprimerElement() throws SQLException {
+    String code = adminView.supprimerElement();
+    ElementServiceImpl.getInstance().removeElement(code);
+  }
+
+  private void mettreAJourElement() throws SQLException {
+    ModuleElement element = adminView.mettreAJourElement();
+    ElementServiceImpl.getInstance().modifyElement(element);
+  }
+
+  /*Gestion des éléments*/
+  public void handleMenuModule(String  choix) throws SQLException {
+    switch (choix) {
+      case "1":
+        ajouterModule();
+        break;
+      case "2":
+        mettreAJourModule();
+        break;
+      case "3":
+        RechercherModuleParCode();
+        break;
+      case "4":
+        supprimerModule();
+        break;
+      case "5":
+        afficherMoudles();
+        break;
+      case "6":
+        System.out.println("Au revoir !");
+        break;
+      default:
+        System.out.println("Choix invalide, veuillez réessayer.");
+        break;
+    }
+  }
+/*Gestion des Modules*/
+  private void ajouterModule() throws SQLException {
+    Module module = adminView.ajouterModule();
+    ModuleServiceImpl.getInstance().addModule(module);
+  }
+  private void afficherMoudles() throws SQLException {
+    List<Module> modules = ModuleServiceImpl.getInstance().getAllModules();
+    adminView.afficherModules(modules);
+  }
+  private void RechercherModuleParCode() throws SQLException {
+    String code = adminView.getElementbyCode();
+    Optional<Module> module = ModuleServiceImpl.getInstance().getModuleByCode(code);
+    if(module.isPresent()){
+      adminView.afficherModule(module.get());
+    }
+  }
+  private void supprimerModule() throws SQLException {
+    String code = adminView.supprimerModule();
+    ModuleServiceImpl.getInstance().deleteModule(code);
+  }
+
+  private void mettreAJourModule() throws SQLException {
+    Module module = adminView.mettreAJourModule();
+    ModuleServiceImpl.getInstance().updateModule(module);
+  }
+  /*les autres espaces de gestion*/
   private void handleManageProfessors() {
     // Implement logic to manage professors
     System.out.println("Managing professors...");

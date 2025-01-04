@@ -70,4 +70,16 @@ public class ModuleElement {
     this.parentModule = parentModule;
     this.isValidated = isValidated;
   }
+
+  @Override
+  public String toString() {
+    return "ModuleElement{" +
+            "code='" + code + '\'' +
+            ", parentModule=" + parentModule +
+            ", coefficient=" + coefficient +
+            ", isValidated=" + isValidated +
+            ", responsibleProfessor=" + responsibleProfessor +
+            ", evaluationModality=" + evaluationModality +
+            '}';
+  }
 }

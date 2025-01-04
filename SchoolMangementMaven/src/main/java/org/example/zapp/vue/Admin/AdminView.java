@@ -2,9 +2,10 @@ package org.example.zapp.vue.Admin;
 
 
 
-import org.example.models.academique.Filiere;
+import org.example.models.academique.*;
 import org.example.models.academique.Module;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class AdminView implements AdminViewInterface {
 
   @Override
   public String getUserChoice() {
-    System.out.print("Enter your choice: ");
+    System.out.print("veuillez entrer votre choix: ");
     Scanner scanner = new Scanner(System.in);
     return scanner.nextLine();
   }
@@ -62,7 +63,7 @@ public class AdminView implements AdminViewInterface {
     System.out.println("5. Rechercher une filière par code");
     System.out.println("6. Afficher les modules d'une filière");
     System.out.println("7. Quitter");
-    System.out.print("Entrez votre choix : ");
+    System.out.print("Entrez votre choix --Menu spécifique-- : ");
   }
 
 
@@ -74,7 +75,6 @@ public class AdminView implements AdminViewInterface {
     System.out.print("Nom : ");
     String nom = scanner.nextLine();
     Filiere filiere = new Filiere(code, nom);
-
     System.out.println("Filière ajoutée avec succès !");
     return filiere ;
   }
@@ -140,4 +140,188 @@ public class AdminView implements AdminViewInterface {
     }
   }
 
+  @Override
+  public void displayGestionElementMenu() {
+    System.out.println("\n--- Menu Gestion des Éléments du Module ---");
+    System.out.println("1. Ajouter un nouvel élément");
+    System.out.println("2. Mettre à jour un élément");
+    System.out.println("3. Rechercher une élément par code");
+    System.out.println("4. Supprimer un élément");
+    System.out.println("5. Afficher tous les éléments");
+    System.out.println("6. Quitter");
+    System.out.print("Entrez votre choix :");
+  }
+
+  @Override
+  public ModuleElement ajouterElement() {
+    System.out.print("Code : ");
+    String code = scanner.nextLine();
+    double coefficient = 0.0;
+    boolean validInput = false;
+
+    while(!validInput) {
+      try {
+        System.out.print("Coefficient (entre 0 et 1) : ");
+        coefficient = scanner.nextDouble();
+        if (!(coefficient < 0.0) && !(coefficient > 1.0)) {
+          validInput = true;
+        } else {
+          System.err.println("Erreur : Le coefficient doit être compris entre 0 et 1.");
+        }
+      } catch (InputMismatchException var9) {
+        System.err.println("Erreur : Le coefficient doit être un nombre valide entre 0 et 1.");
+        scanner.nextLine();
+      }
+    }
+
+    boolean isValidated = false;
+    validInput = false;
+
+    while(!validInput) {
+      try {
+        System.out.print("Validé (true/false) : ");
+        isValidated = scanner.nextBoolean();
+        validInput = true;
+      } catch (InputMismatchException var8) {
+        System.err.println("Erreur : Veuillez entrer true ou false pour la validation.");
+        scanner.nextLine();
+      }
+    }
+
+    scanner.nextLine();
+    System.out.print("Code du module : ");
+    String moduleCode = scanner.nextLine();
+    ModuleElement newElement = new ModuleElement(code, coefficient, false ,new Module(moduleCode));
+    System.out.println("Élément ajouté avec succès !");
+    return newElement ;
+  }
+
+  @Override
+  public ModuleElement mettreAJourElement() {
+    System.out.print("Code de l'élément à modifier : ");
+    String code = scanner.nextLine();
+    System.out.print("Nouveau coefficient : ");
+    double coefficient = scanner.nextDouble();
+    System.out.print("Validé (true/false) : ");
+    boolean isValidated = scanner.nextBoolean();
+    scanner.nextLine();
+    System.out.print("Nouveau code du module : ");
+    String moduleCode = scanner.nextLine();
+    ModuleElement updatedElement = new ModuleElement(code, coefficient, isValidated, new Module( moduleCode ));
+    System.out.println("Élément mis à jour avec succès !");
+    return updatedElement;
+  }
+
+  @Override
+  public String supprimerElement() {
+    System.out.print("Code : ");
+    String code = scanner.nextLine();
+    System.out.println("élément supprimée avec succès !");
+    return code ;
+  }
+
+  @Override
+  public void afficherElements(List<ModuleElement> Elements) {
+    System.out.println("Liste des éléments :");
+    for (ModuleElement element : Elements) {
+      System.out.println(element.getCode() + " - " + element.getCoefficient()+ " - " +element.isValidated()+ " - " + element.getParentModule().getCode());
+    }
+  }
+
+  @Override
+  public String getElementbyCode() {
+    System.out.print("Code de l'élément : ");
+    String code = scanner.nextLine();
+    return code;
+  }
+  @Override
+  public void afficherElement(ModuleElement element){
+    if (element!=null) {
+      System.out.println("élement trouvé : " + element.getCode() + " - " + element.getCoefficient()+ " - " +element.getParentModule().getCode());
+    } else {
+      System.out.println("élément non trouvé.");
+    }
+
+  }
+
+  @Override
+  public void displayGestionModuleMenu() {
+    System.out.println("\n--- Menu Gestion des Modules du Module ---");
+    System.out.println("1. Ajouter un nouvel Module");
+    System.out.println("2. Mettre à jour un Module");
+    System.out.println("3. Rechercher une Module par code");
+    System.out.println("4. Supprimer un Module");
+    System.out.println("5. Afficher tous les Modules");
+    System.out.println("6. Quitter");
+    System.out.print("Entrez votre choix concernant la gestion des modules:");
+  }
+
+  @Override
+  public Module ajouterModule() {
+    System.out.print("Code : ");
+    String code = scanner.nextLine();
+    System.out.print("Nom : ");
+    String nom = scanner.nextLine();
+    System.out.print("Semestre : ");
+    String semestre = scanner.nextLine();
+    System.out.print("Filière code : ");
+    String filiereCode = scanner.nextLine();
+    // Utilisation du ModuleBuilder
+    Module module = new ModuleBuilder()
+            .setCode(code)
+            .setName(nom)
+            .setSemester(Semester.valueOf(semestre))
+            .setFiliere(new Filiere(filiereCode, null))
+            .build(); // Construction de l'objet Module
+    return module;
+  }
+
+  @Override
+  public Module mettreAJourModule() {
+    System.out.print("Code du Module à modifier : ");
+    String code = scanner.nextLine();
+    System.out.print("Nouveau nom du Module : ");
+    String nom = scanner.nextLine();
+    System.out.print("Nouveau semestre : ");
+    String semestre = scanner.nextLine();
+
+    // Création d'une instance de Module avec le builder pour mettre à jour
+    Module module = new ModuleBuilder()
+            .setCode(code)
+            .setName(nom)
+            .setSemester(Semester.valueOf(semestre))// Nouvelle Filière avec seulement le code
+            .build(); // Construction du module mis à jour
+    return module; // Retour du module mis à jour
+  }
+  @Override
+  public String supprimerModule() {
+    System.out.print("Code : ");
+    String code = scanner.nextLine();
+    System.out.println("le module supprimée avec succès !");
+    return code ;
+  }
+
+  @Override
+  public void afficherModules(List<Module> modules) {
+    System.out.println("Liste des Modules :");
+    for (Module module : modules) {
+      System.out.println(module.getCode() + " - " + module.getName() + " - " + module.getSemester() );
+    }
+  }
+
+  @Override
+  public String getModulebyCode() {
+    System.out.print("Code du module : ");
+    String code = scanner.nextLine();
+    return code;
+  }
+
+  @Override
+  public void afficherModule(Module module) {
+    if (module!=null) {
+      System.out.println("Module trouvé : " + module.getCode() + " - " + module.getName()+ " - " +module.getSemester()+ " - " +module.getFiliere());
+    } else {
+      System.out.println("Module non trouvé.");
+    }
+  }
 }
