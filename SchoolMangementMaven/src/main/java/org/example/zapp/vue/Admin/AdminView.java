@@ -1,9 +1,9 @@
 package org.example.zapp.vue.Admin;
 
-
-
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
+import org.example.models.users.Student.Student;
+import org.example.models.users.Student.StudentBuilder;
 
 import java.util.Scanner;
 import java.util.List;
@@ -65,6 +65,19 @@ public class AdminView implements AdminViewInterface {
     System.out.print("Entrez votre choix : ");
   }
 
+  @Override
+  public void displayGestionetudiantMenu(){
+    System.out.println("\n--- MENU GESTION DES ÉTUDIANTS ---");
+    System.out.println("1. Ajouter un étudiant");
+    System.out.println("2. Mettre à jour un étudiant");
+    System.out.println("3. Supprimer un étudiant");
+    System.out.println("4. Afficher tous les étudiants");
+    System.out.println("5. Rechercher un étudiant par nom");
+    System.out.println("6. Quitter");
+    System.out.print("Entrez votre choix : ");
+  }
+
+
 
   // Ajouter une filière
   @Override
@@ -74,10 +87,11 @@ public class AdminView implements AdminViewInterface {
     System.out.print("Nom : ");
     String nom = scanner.nextLine();
     Filiere filiere = new Filiere(code, nom);
-
     System.out.println("Filière ajoutée avec succès !");
     return filiere ;
   }
+
+
 
   // Mettre à jour une filière
   @Override
@@ -117,6 +131,7 @@ public class AdminView implements AdminViewInterface {
     return code;
   }
 
+
   @Override
   public void afficherFiliere(Filiere filiere){
     if (filiere!=null) {
@@ -139,5 +154,99 @@ public class AdminView implements AdminViewInterface {
       }
     }
   }
+
+
+  // Ajouter etudiant
+  public Student GetStudent() {
+    System.out.print("ID : ");
+    String id = scanner.nextLine();
+    System.out.print("Prénom : ");
+    String firstName = scanner.nextLine();
+    System.out.print("Nom : ");
+    String lastName = scanner.nextLine();
+    System.out.print("Code Filière : ");
+    String filiereCode = scanner.nextLine();
+    Student s = new StudentBuilder().setId(id)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .setFiliere(new Filiere(filiereCode))
+            .build();
+    return s;
+    }
+
+  @Override
+  public String getStudentName() {
+    System.out.print("Le nom de l'étudiant : ");
+    String lastname = scanner.nextLine();
+    return lastname;
+  }
+
+  @Override
+  public void afficherStudent(Student student) {
+    if (student!=null) {
+      System.out.println(" Etudiant trouvée : " + student.getId()+ " - " + student.getFirstName()+ " - " + student.getLastName() + " - " + student.getFiliere().getCode());
+    } else {
+      System.out.println("Etudiant non trouvée.");
+    }
+
+  }
+
+
+  // Méthode pour mettre à jour un étudiant
+  public Student mettreAJourStudent(){
+    System.out.print("ID : ");
+    String id = scanner.nextLine();
+    System.out.print("Nouveau prénom : ");
+    String firstName = scanner.nextLine();
+    System.out.print("Nouveau nom : ");
+    String lastName = scanner.nextLine();
+    Student s = new StudentBuilder().setId(id)
+            .setFirstName(firstName)
+            .setLastName(lastName)
+            .build();
+    System.out.println("étudiant mise à jour avec succès !");
+    return s;
+  }
+
+  // Méthode pour supprimer un étudiant
+  public String supprimerStudent(){
+    System.out.print("ID : ");
+    String id = scanner.nextLine();
+    System.out.println(" étudiant supprimée avec succès !");
+    return id ;
+
+  }
+
+  // Méthode pour afficher tous les étudiants
+  public void afficherStudents(List<Student> students){
+    System.out.println("Liste des étudiants :");
+    for (Student student : students) {
+      System.out.println(student.getId()+ " - " + student.getFirstName() + " - " + student.getLastName() + " - " + student.getFiliere().getCode());
+    }
+  }
+
+  @Override
+  public void rechercherStudent(Student s){
+    System.out.print("Nom : ");
+    String lastName = scanner.nextLine();
+    if (s!=null) {
+      System.out.println("étudiant trouvée : " + s.getId()+ " - " + s.getFirstName() + " - " + s.getFirstName() + " - " + s.getLastName() + " - " + s.getFiliere().getCode());
+    } else {
+      System.out.println("étudiant non trouvée.");
+    }
+
+  }
+
+  @Override
+  public void afficherMessageajoutetudiant(boolean b) {
+    if(b){
+      System.out.println("Étudiant ajouté avec succès !");
+    } else{
+
+      System.out.println("Étudiant non ajouté car la filiére n'existe pas !");
+
+    }
+  }
+
 
 }

@@ -1,24 +1,21 @@
 package org.example.repositories.StudentDAO;
 
 import org.example.models.academique.Filiere;
-import org.example.models.user.Student;
+import org.example.models.users.Student.Student;
+import org.example.repositories.SuperRepo;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class StudentDAOImpl implements StudentDAO {
+public class StudentDAOImpl extends SuperRepo implements StudentDAO {
+
+    public StudentDAOImpl() {
+        super(myDatabase);
+    }
 
     private static StudentDAOImpl instance;
-    private Connection connection;
-
-    private StudentDAOImpl()  {
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/schoolmanagement", "root", "");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static StudentDAOImpl getInstance()  {
         if (instance == null) {
@@ -27,12 +24,13 @@ public class StudentDAOImpl implements StudentDAO {
         return instance;
     }
 
-    @Override
-    public void addStudent(Student student) {
-        String filiereCode = student.getFiliere().getCode();
 
+    @Override
+    public void addStudent(Student student) throws SQLException {
+        String filiereCode = student.getFiliere().getCode();
         // Vérifier si la filière existe dans la table filiere
         String checkFiliereSql = "SELECT COUNT(*) FROM filiere WHERE code = ?";
+        Connection connection = myDatabase.connect() ;
         try (PreparedStatement checkStatement = connection.prepareStatement(checkFiliereSql)) {
             checkStatement.setString(1, filiereCode);
             ResultSet resultSet = checkStatement.executeQuery();
@@ -55,37 +53,49 @@ public class StudentDAOImpl implements StudentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            myDatabase.disconnect();
+        }
     }
 
 
     @Override
-    public void updateStudent(String id, String firstName, String lastName) {
+    public void updateStudent(Student student) throws SQLException {
         String sql = "UPDATE students SET firstName = ?, lastName = ? WHERE id = ?";
+        Connection connection = myDatabase.connect() ;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, firstName);
-            statement.setString(2, lastName);
-            statement.setString(3, id);
-            statement.executeUpdate(); // Ne retourne rien
+            statement.setString(1, student.getFirstName());
+            statement.setString(2, student.getLastName());
+            statement.setString(3, student.getId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            myDatabase.disconnect();
         }
     }
 
     @Override
-    public void deleteStudent(String id) {
+    public void deleteStudent(String id) throws SQLException {
         String sql = "DELETE FROM students WHERE id = ?";
+        Connection connection = myDatabase.connect() ;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, id);
-            statement.executeUpdate(); // Ne retourne rien
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            myDatabase.disconnect();
         }
     }
 
 
     @Override
-    public Optional<Student> findStudentByLastName(String lastName) {
+    public Optional<Student> findStudentByLastName(String lastName) throws SQLException {
         String query = "SELECT * FROM students WHERE lastName = ?";
+        Connection connection = myDatabase.connect() ;
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, lastName);
@@ -96,24 +106,27 @@ public class StudentDAOImpl implements StudentDAO {
                             rs.getString("id"),
                             rs.getString("firstName"),
                             rs.getString("lastName"),
-                            null // Filtrage de la Filière si nécessaire
+                            new Filiere(rs.getString("Filierecode"))
                     );
-                    return Optional.of(student); // Retourner l'étudiant encapsulé dans un Optional
+                    return Optional.of(student);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            myDatabase.disconnect();
         }
 
-        return Optional.empty(); // Si aucun étudiant n'est trouvé, retourner un Optional vide
+        return Optional.empty();
     }
 
 
     @Override
-    public List<Student> getAllStudents() {
+    public List<Student> getAllStudents() throws SQLException {
         List<Student> students = new ArrayList<>();
         try {
             String sql = "SELECT * FROM students";
+            Connection connection = myDatabase.connect() ;
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
@@ -121,17 +134,21 @@ public class StudentDAOImpl implements StudentDAO {
                         resultSet.getString("id"),
                         resultSet.getString("firstName"),
                         resultSet.getString("lastName"),
-                        null
+                        new Filiere(resultSet.getString("Filierecode"))
                 ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            myDatabase.disconnect();
+        }
         return students;
     }
 
-    public Filiere getFiliereByCode(String filiereCode) {
+    public Filiere getFiliereByCode(String filiereCode) throws SQLException {
         String sql = "SELECT * FROM filiere WHERE code = ?";
+        Connection connection = myDatabase.connect() ;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // On prépare la requête avec le code de la filière
             statement.setString(1, filiereCode);
@@ -152,7 +169,12 @@ public class StudentDAOImpl implements StudentDAO {
             // Gestion de l'exception SQL
             System.out.println("Erreur lors de l'accès à la base de données : " + e.getMessage());
             return null; // Retourner null si une exception survient
+        } finally {
+            myDatabase.disconnect();
         }
     }
+
+
+
 
 }

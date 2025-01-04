@@ -1,9 +1,7 @@
 package org.example.repositories.FiliereDAO;
-import org.example.config.Database;
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
 import org.example.repositories.SuperRepo;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -111,6 +109,7 @@ public class FiliereDAOImpl extends SuperRepo implements FiliereDAO {
         return Optional.empty();
     }
 
+    @Override
     public boolean checkIfFiliereExists(String code) throws SQLException {
         String query = "SELECT 1 FROM filiere WHERE code = ?";
         Connection connection = myDatabase.connect();

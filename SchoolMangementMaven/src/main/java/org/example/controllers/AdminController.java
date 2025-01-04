@@ -1,8 +1,11 @@
 package org.example.controllers;
 
 import org.example.models.academique.Filiere;
+import org.example.models.users.Student.Student;
+
 import org.example.services.user.FiliereService.FiliereService;
 import org.example.models.academique.Module;
+import org.example.services.user.StudentServicesabrin.StudentServiceImpl;
 import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
 
@@ -54,6 +57,12 @@ public class AdminController {
     handleMenuFiliere(choix);
   }
 
+  private void handleManageStudents() throws SQLException {
+    AdminView.getInstance().displayGestionetudiantMenu();
+    String choix = adminView.getUserChoice();
+    handleMenuStudents(choix);
+  }
+
   public void handleMenuFiliere(String  choix) throws SQLException {
     switch (choix) {
       case "1":
@@ -94,6 +103,8 @@ public class AdminController {
    adminView.afficherFilieres(filieres);
   }
 
+
+
   private void rechercherFiliere() throws SQLException {
    String code = adminView.getFiliereCode();
    Optional<Filiere> filiere = FiliereService.getInstance().getFiliereByCode(code);
@@ -107,15 +118,22 @@ public class AdminController {
     FiliereService.getInstance().deleteFiliere(code);
   }
 
+
+
   private void mettreAJourFiliere() throws SQLException {
     Filiere filiere = adminView.mettreAJourFiliere();
     FiliereService.getInstance().updateFiliere(filiere);
   }
 
+
+
   private void ajouterFiliere() throws SQLException {
     Filiere filiere = adminView.ajouterFiliere();
     FiliereService.getInstance().addFiliere(filiere);
   }
+
+
+
 
   private void handleManageProfessors() {
     // Implement logic to manage professors
@@ -123,17 +141,78 @@ public class AdminController {
     // Example: List all professors, add a new professor, etc.
   }
 
-  private void handleManageStudents() {
-    // Implement logic to manage students
-    System.out.println("Managing students...");
-    // Example: List all students, add a new student, etc.
-  }
 
   private void handleManagePrograms() {
     // Implement logic to manage programs
     System.out.println("Managing programs...");
     // Example: List all programs, add a new program, etc.
   }
+
+  // partie étudiants
+
+  public void handleMenuStudents(String  choix) throws SQLException{
+
+    switch (choix) {
+      case "1":
+        ajouterStudent();
+        break;
+      case "2":
+        mettreAJourStudent();
+        break;
+      case "3":
+        supprimerStudent();
+        break;
+      case "4":
+        afficherStudents();
+        break;
+      case "5":
+        rechercherStudent();
+        break;
+      case "6":
+        System.out.println("Au revoir !");
+        break;
+      default:
+        System.out.println("Choix invalide, veuillez réessayer.");
+        break;
+
+  }
+
+
+  }
+
+  //Ajouter etudiant
+  private void ajouterStudent() throws SQLException {
+    Student student = adminView.GetStudent();
+    adminView.afficherMessageajoutetudiant(StudentServiceImpl.getInstance().addStudent(student));
+  }
+
+  private void mettreAJourStudent() throws SQLException {
+    Student student = adminView.mettreAJourStudent();
+    StudentServiceImpl.getInstance().updateStudent(student);
+  }
+
+  private void supprimerStudent() throws SQLException {
+    String id = adminView.supprimerStudent();
+    StudentServiceImpl.getInstance().deleteStudent(id);
+  }
+
+  private void afficherStudents() throws SQLException {
+    List<Student> students = StudentServiceImpl.getInstance().getAllStudents();
+    adminView.afficherStudents(students);
+  }
+
+  private void rechercherStudent() throws SQLException {
+    String lastName = adminView.getStudentName();
+    Optional<Student> student = StudentServiceImpl.getInstance().findStudentByLastName(lastName);
+    if(student.isPresent()){
+      adminView.afficherStudent(student.get());
+    }
+  }
+
+
+
+
+
 
 
 }
