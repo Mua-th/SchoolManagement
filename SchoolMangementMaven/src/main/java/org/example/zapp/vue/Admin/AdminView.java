@@ -247,10 +247,12 @@ public class AdminView implements AdminViewInterface {
   public void afficherElements(List<ModuleElement> Elements) {
     System.out.println("Liste des éléments :");
     for (ModuleElement element : Elements) {
-      System.out.println(element.getCode() + " - " + element.getCoefficient()+ " - " +element.isValidated()+ " - " + element.getParentModule().getCode());
+      System.out.println(element.getCode() + " - " + element.getCoefficient() + " - " + element.isValidated() + " - " + element.getParentModule().getCode());
     }
+  }
 
   // Ajouter etudiant
+    @Override
   public Student GetStudent() {
     System.out.print("ID : ");
     String id = scanner.nextLine();
@@ -312,6 +314,7 @@ public class AdminView implements AdminViewInterface {
   }
 
   // Méthode pour afficher tous les étudiants
+  @Override
   public void afficherStudents(List<Student> students){
     System.out.println("Liste des étudiants :");
     for (Student student : students) {
@@ -334,7 +337,8 @@ public class AdminView implements AdminViewInterface {
     } else {
       System.out.println("élément non trouvé.");
     }}
-    
+
+  @Override
   public void rechercherStudent(Student s){
     System.out.print("Nom : ");
     String lastName = scanner.nextLine();
@@ -429,6 +433,7 @@ public class AdminView implements AdminViewInterface {
     }
   }
 
+  @Override
   public void afficherMessageajoutetudiant(boolean b) {
     if(b){
       System.out.println("Étudiant ajouté avec succès !");

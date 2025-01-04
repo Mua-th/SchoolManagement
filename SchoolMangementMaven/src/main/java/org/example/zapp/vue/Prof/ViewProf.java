@@ -127,6 +127,10 @@ public class ViewProf extends View  implements ViewProfInterface  , Observer {
     }
   }
 
+  @Override
+  public void displayAverageGrade(ModuleElement moduleElement, double averageGrade) {
+    System.out.println("Average grade for Module Element " + moduleElement.getCode() + ": " + averageGrade);
+  }
 
 
   @Override

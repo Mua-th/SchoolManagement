@@ -16,6 +16,8 @@ public interface StudentGradeServiceInterface extends Service<StudentGrade, Stud
 
   List<StudentGrade> getStudentGradesByModuleElement(String studentId, String moduleElementCode) throws SQLException;
 
+  double calculateWeightedAverage(List<StudentGrade> studentGrades);
+
   List<StudentGrade> getStudentGradesByModuleElementAndModality(String studentId, String moduleElementCode, EvaluationModality evaluationModality) throws SQLException;
 
   boolean updateStudentGrade(StudentGrade studentGrade) throws SQLException;

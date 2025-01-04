@@ -94,6 +94,12 @@ public class ProfController implements Observer {
       Student student = studentService.findByIdForProf(AppState.getUser().getId(), studentId);
       if (student != null) {
         viewProf.displayStudent(student);
+        List<ModuleElement> moduleElements = moduleElementService.getModuleElementsByProfId(AppState.getUser().getId());
+        for (ModuleElement moduleElement : moduleElements) {
+          List<StudentGrade> studentGrades = studentGradeService.getStudentGradesByModuleElement(studentId, moduleElement.getCode());
+          double averageGrade = studentGradeService.calculateWeightedAverage(studentGrades);
+          viewProf.displayAverageGrade(moduleElement, averageGrade);
+        }
       } else {
         viewProf.displayMessage("Student not found.");
       }
@@ -101,7 +107,6 @@ public class ProfController implements Observer {
       e.printStackTrace();
     }
   }
-
   public void handleViewModuleElements() {
     try {
       String professorId = AppState.getUser().getId();

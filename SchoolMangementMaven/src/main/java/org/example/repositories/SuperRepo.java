@@ -17,6 +17,10 @@ public class SuperRepo {
     return instance ;
   }
 
+  public void setDatabase(Database myDatabase) {
+    SuperRepo.myDatabase = myDatabase;
+  }
+
   public SuperRepo(Database myDatabase) {
     this.myDatabase = myDatabase;
   }

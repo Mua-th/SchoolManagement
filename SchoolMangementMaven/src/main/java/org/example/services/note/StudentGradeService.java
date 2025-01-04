@@ -50,7 +50,31 @@ public class StudentGradeService implements StudentGradeServiceInterface {
 
   @Override
   public List<StudentGrade> getStudentGradesByModuleElement(String studentId, String moduleElementCode) throws SQLException {
-    return null;
+    return studentGradeRepo.getStudentGradesByModuleElement(studentId, moduleElementCode);
+
+  }
+
+  @Override
+  public double calculateWeightedAverage(List<StudentGrade> studentGrades) {
+    double ccGrade = studentGrades.stream()
+      .filter(grade -> grade.getStudentGradeId().getEvaluationModality() == EvaluationModality.EXAM)
+      .mapToDouble(StudentGrade::getGrade)
+      .average()
+      .orElse(0.0);
+
+    double tpGrade = studentGrades.stream()
+      .filter(grade -> grade.getStudentGradeId().getEvaluationModality() == EvaluationModality.TP)
+      .mapToDouble(StudentGrade::getGrade)
+      .average()
+      .orElse(0.0);
+
+    double projectGrade = studentGrades.stream()
+      .filter(grade -> grade.getStudentGradeId().getEvaluationModality() == EvaluationModality.PROJECT)
+      .mapToDouble(StudentGrade::getGrade)
+      .average()
+      .orElse(0.0);
+
+    return (ccGrade * 0.30) + (tpGrade * 0.20) + (projectGrade * 0.50);
   }
 
 

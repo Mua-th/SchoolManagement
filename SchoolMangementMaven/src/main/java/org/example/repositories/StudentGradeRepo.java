@@ -16,11 +16,8 @@ import java.util.List;
 
 public class StudentGradeRepo extends SuperRepo implements Repository<StudentGrade, StudentGradeId>{
 
-
-
-
-
-
+   public Connection getConnection() throws SQLException {
+    return myDatabase.connect();}
 
   //implement the singleton pattern for the StudentGradeRepo
   private static StudentGradeRepo instance;
@@ -35,8 +32,6 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
     }
     return instance;
   }
-
-
 
   @Override
   public StudentGrade findById(StudentGradeId studentGradeId) throws SQLException {
@@ -64,8 +59,13 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
     return null;
   }
 
+
   @Override
   public boolean save(StudentGrade studentGrade) throws SQLException {
+    if (studentGrade.getGrade() < 0 || studentGrade.getGrade() > 20) {
+      throw new IllegalArgumentException("Grade must be between 0 and 20");
+    }
+
     Connection connection = myDatabase.connect();
     try {
       // Check if the record already exists
@@ -95,7 +95,7 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
         insertStatement.setString(2, studentGrade.getStudentGradeId().getModuleElementCode());
         insertStatement.setString(3, studentGrade.getStudentGradeId().getEvaluationModality().name());
         insertStatement.setDouble(4, studentGrade.getGrade());
-        insertStatement.setInt(5, 0); // Assuming isAbsent is always false
+        insertStatement.setInt(5, studentGrade.isAbsent() ? 1 : 0);
         insertStatement.executeUpdate();
       }
     } catch (SQLException e) {
@@ -110,6 +110,7 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
     }
     return true;
   }
+
   @Override
   public boolean delete(StudentGradeId studentGradeId) {
     return false;

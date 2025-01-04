@@ -77,7 +77,9 @@ public class SwingAdminView implements  AdminViewInterface{
     }
 
     @Override
-    public ModuleElement ajouterElement() { }
+    public ModuleElement ajouterElement() {
+      return null;
+    }
   
   @Override
    public ModuleElement mettreAJourElement() {
@@ -124,7 +126,7 @@ public class SwingAdminView implements  AdminViewInterface{
 
     @Override
 
-    public Module ajouterModule() { }
+    public Module ajouterModule() {   return null;}
     public Student mettreAJourStudent() {
 
         return null;
@@ -137,7 +139,9 @@ public class SwingAdminView implements  AdminViewInterface{
     }
 
     @Override
-    public String supprimerModule() { }
+    public String supprimerModule() {
+      return "";
+    }
 
     public String supprimerStudent() {
         return "";
