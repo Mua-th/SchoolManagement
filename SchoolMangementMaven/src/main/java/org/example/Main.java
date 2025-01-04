@@ -28,7 +28,6 @@ import org.example.zapp.vue.Prof.ViewProfInterface;
 import org.example.zapp.vue.SwingLoginView;
 
 
-
 import java.sql.SQLException;
 
 public class Main {
@@ -87,6 +86,4 @@ public class Main {
     }
 
   }
-
-
 }

@@ -23,42 +23,61 @@ public class Student {
   }
 
   public String getId() {
+
     return id;
   }
 
   public void setId(String id) {
+
     this.id = id;
   }
 
   public String getFirstName() {
+
     return firstName;
   }
 
   public void setFirstName(String firstName) {
+
     this.firstName = firstName;
   }
 
   public String getLastName() {
+
     return lastName;
   }
 
   public void setLastName(String lastName) {
+
     this.lastName = lastName;
   }
 
   public Filiere getFiliere() {
+
     return filiere;
   }
 
   public void setFiliere(Filiere filiere) {
+
     this.filiere = filiere;
   }
 
   public Map<ModuleElement, StudentGrade> getGrades() {
+
     return grades;
   }
 
   public void setGrades(Map<ModuleElement, StudentGrade> grades) {
     this.grades = grades;
+  }
+
+  @Override
+  public String toString() {
+    return "Student{" +
+            "id='" + id + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", filiere=" + filiere +
+            '}';
   }
 }

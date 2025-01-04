@@ -9,5 +9,5 @@ public interface Repository<T , ID> {
   boolean save(T t) throws SQLException;
   boolean delete(ID id) ;
 
-
 }
+

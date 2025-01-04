@@ -2,7 +2,7 @@ package org.example.vue.StudentVue;
 
 import org.example.models.academique.Filiere;
 import org.example.services.user.StudentServicesabrin.StudentService;
-import org.example.models.user.Student;
+import org.example.models.users.Student.Student;
 import org.example.services.user.StudentServicesabrin.StudentServiceImpl;
 
 import java.sql.SQLException;
@@ -29,6 +29,36 @@ public class StudentVue implements IStudentVue {
         return instance;
     }
 
+    @Override
+    public void afficherMenu() {
+
+    }
+
+    @Override
+    public void ajouterStudent() throws SQLException {
+
+    }
+
+    @Override
+    public void mettreAJourStudent() throws SQLException {
+
+    }
+
+    @Override
+    public void supprimerStudent() throws SQLException {
+
+    }
+
+    @Override
+    public void afficherStudents() throws SQLException {
+
+    }
+
+    @Override
+    public void rechercherStudent() throws SQLException {
+
+    }
+    /*
     // Menu principal
     public void afficherMenu() {
         int choix;
@@ -70,7 +100,7 @@ public class StudentVue implements IStudentVue {
         } while (choix != 6);
     }
 
-    public void ajouterStudent() {
+    public void ajouterStudent() throws SQLException {
             System.out.print("ID : ");
             String id = scanner.nextLine();
             System.out.print("Prénom : ");
@@ -95,7 +125,7 @@ public class StudentVue implements IStudentVue {
     }
 
     // Mettre à jour un étudiant
-    public void mettreAJourStudent() {
+    public void mettreAJourStudent() throws SQLException {
         System.out.print("ID : ");
         String id = scanner.nextLine();
         System.out.print("Nouveau prénom : ");
@@ -108,7 +138,7 @@ public class StudentVue implements IStudentVue {
     }
 
     // Supprimer un étudiant
-    public void supprimerStudent() {
+    public void supprimerStudent() throws SQLException {
         System.out.print("ID : ");
         String id = scanner.nextLine();
         studentService.deleteStudent(id);
@@ -116,7 +146,7 @@ public class StudentVue implements IStudentVue {
     }
 
     // Afficher tous les étudiants
-    public void afficherStudents() {
+    public void afficherStudents() throws SQLException {
         List<Student> students = studentService.getAllStudents();
         System.out.println("Liste des étudiants :");
         for (Student student : students) {
@@ -125,7 +155,7 @@ public class StudentVue implements IStudentVue {
     }
 
     // Rechercher un étudiant par nom
-    public void rechercherStudent() {
+    public void rechercherStudent() throws SQLException {
         System.out.print("Nom : ");
         String lastName = scanner.nextLine();
 
@@ -139,6 +169,6 @@ public class StudentVue implements IStudentVue {
         } else {
             System.out.println("Étudiant non trouvé.");
         }
-    }
+    }*/
 
 }
