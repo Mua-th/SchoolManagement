@@ -55,7 +55,6 @@ public class SwingViewProf extends Observable implements ViewProfInterface {
     viewModuleElementsButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-
         setChanged();
         notifyObservers("viewModuleElements");
       }
