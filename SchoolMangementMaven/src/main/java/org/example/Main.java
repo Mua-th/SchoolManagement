@@ -12,9 +12,12 @@ import org.example.repositories.User.StudentDAOImpl;
 import org.example.repositories.User.UserRepository;
 import org.example.services.academique.ModuleElementServiceImpl;
 import org.example.services.note.StudentGradeService;
+import org.example.services.user.ElementService.ElementServiceImpl;
+import org.example.services.user.FiliereService.FiliereService;
 import org.example.services.user.StudentService;
 import org.example.services.user.StudentServiceImpl;
 import org.example.services.user.UserService;
+import org.example.services.user.moduleserviceHM.ModuleServiceImpl;
 import org.example.zapp.AppState;
 import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
@@ -63,7 +66,12 @@ public class Main {
     while (true) {
       if (AppState.getInstance().isAuthenticated()) {
         if (AppState.getInstance().getUser().getRole().equals(UserRole.Administrator)) {
-          AdminController adminController = new AdminController(adminView);
+          AdminController adminController = new AdminController( FiliereService.getInstance() ,
+            ElementServiceImpl.getInstance(),
+            ModuleServiceImpl.getInstance(),
+            org.example.services.user.StudentServicesabrin.StudentServiceImpl.getInstance(),
+            adminView ) ;
+
           adminController.handleInput();
         } else {
           StudentService studentService = StudentServiceImpl.getInstance(StudentDAOImpl.getInstance());
