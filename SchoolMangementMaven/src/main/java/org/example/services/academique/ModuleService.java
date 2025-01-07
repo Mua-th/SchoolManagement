@@ -1,8 +1,9 @@
-package org.example.services.user.moduleserviceHM;
+package org.example.services.academique;
 
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
 import org.example.models.academique.Semester;
+import org.example.repositories.academique.ModuleDao;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -21,4 +22,5 @@ public interface ModuleService {
 
         void deleteModule(String module)throws SQLException;
 
+        void setModuleDao(ModuleDao moduleDaoMock);
 }

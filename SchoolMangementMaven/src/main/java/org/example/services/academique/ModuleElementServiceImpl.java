@@ -6,38 +6,42 @@ import org.example.models.users.Student.Student;
 import org.example.repositories.academique.ModuleElementDao;
 import org.example.repositories.academique.ModuleElementDaoImpl;
 import org.example.services.note.StudentGradeService;
+import org.example.services.note.StudentGradeServiceInterface;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class ModuleElementServiceImpl implements ModuleElementService {
-    private final ModuleElementDao moduleElementDao = ModuleElementDaoImpl.getInstance();
-    private final StudentGradeService studentGradeService =  StudentGradeService.getInstance();
-    @Override
-    public ModuleElement getModuleElementById(String code) throws SQLException {
-        return moduleElementDao.findById(code);
+    private final ModuleElementDao moduleElementDao ;
+    private final StudentGradeServiceInterface studentGradeService ;
+
+    // implement singleton
+
+    private static ModuleElementServiceImpl instance;
+
+
+    public static ModuleElementServiceImpl getInstance(StudentGradeServiceInterface studentGradeService , ModuleElementDao moduleElementDao) {
+        if (instance == null) {
+            synchronized (ModuleElementServiceImpl.class) {
+                if (instance == null) {
+                    instance = new ModuleElementServiceImpl(
+                            moduleElementDao,
+                      studentGradeService
+                    );
+                }
+            }
+        }
+        return instance;
     }
 
-    @Override
-    public List<ModuleElement> getAllModuleElements() throws SQLException {
-        return moduleElementDao.findAll();
-    }
-
-
-
-    @Override
-    public boolean createModuleElement(ModuleElement moduleElement) throws SQLException {
-        return moduleElementDao.save(moduleElement);
+    public ModuleElementServiceImpl(ModuleElementDao moduleElementDao, StudentGradeServiceInterface studentGradeService) {
+        this.moduleElementDao = moduleElementDao;
+        this.studentGradeService = studentGradeService;
     }
 
     @Override
     public boolean updateModuleElement(ModuleElement moduleElement) throws SQLException {
         return moduleElementDao.update(moduleElement);
-    }
-
-    @Override
-    public boolean deleteModuleElement(String code) throws SQLException {
-        return moduleElementDao.delete(code);
     }
 
 
@@ -46,7 +50,6 @@ public class ModuleElementServiceImpl implements ModuleElementService {
         // Implement logic to get all ModuleElements by professor ID
         return moduleElementDao.findAllByProfId(professorId);
     }
-
 
     @Override
     public boolean validateModuleElement(String moduleElementCode) throws Exception {
@@ -86,5 +89,27 @@ public class ModuleElementServiceImpl implements ModuleElementService {
         // Implement logic to get all students subscribed to a ModuleElement
 
         return moduleElementDao.getStudentsByModuleElement(selectedmoduleElement.getCode());
+    }
+
+
+
+    @Override
+    public ModuleElement findById(String s) throws SQLException {
+        return moduleElementDao.findById(s);
+    }
+
+    @Override
+    public List<ModuleElement> findAll() throws SQLException {
+        return moduleElementDao.findAll();
+    }
+
+    @Override
+    public boolean save(ModuleElement moduleElement) throws SQLException {
+        return moduleElementDao.save(moduleElement);
+    }
+
+    @Override
+    public boolean delete(String s) throws SQLException {
+        return moduleElementDao.delete(s);
     }
 }

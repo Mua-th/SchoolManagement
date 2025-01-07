@@ -2,18 +2,13 @@ package org.example.controllers;
 
 import org.example.models.academique.Filiere;
 import org.example.models.academique.ModuleElement;
-import org.example.services.user.ElementService.ElementService;
-import org.example.services.user.ElementService.ElementServiceImpl;
-import org.example.services.user.FiliereService.FiliereService;
-import org.example.models.academique.Module;
-import org.example.services.user.StudentServicesabrin.StudentService;
-import org.example.services.user.moduleserviceHM.ModuleService;
-import org.example.services.user.moduleserviceHM.ModuleServiceImpl;
-import org.example.models.users.Student.Student;
+import org.example.services.academique.ModuleElementService;
 
-import org.example.services.user.FiliereService.FiliereService;
+import org.example.services.academique.FiliereService;
 import org.example.models.academique.Module;
-import org.example.services.user.StudentServicesabrin.StudentServiceImpl;
+import org.example.services.user.StudentService;
+import org.example.services.academique.ModuleService;
+import org.example.models.users.Student.Student;
 
 import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
@@ -31,7 +26,7 @@ public class AdminController {
   private FiliereService filiereService ;
   private ModuleService moduleService ;
 
-  private ElementService elementService ;
+  private ModuleElementService elementService ;
 
 
   private StudentService studentService;
@@ -40,7 +35,7 @@ public class AdminController {
 
 
 
-  public AdminController(FiliereService filiereService, ElementService elementService, ModuleService moduleService, StudentService studentService , AdminViewInterface adminView) {
+  public AdminController(FiliereService filiereService, ModuleElementService elementService, ModuleService moduleService, StudentService studentService , AdminViewInterface adminView) {
     this.filiereService = filiereService;
     this.elementService = elementService;
     this.moduleService = moduleService;
@@ -198,27 +193,25 @@ public class AdminController {
 
   private void ajouterElement() throws SQLException {
     ModuleElement element = adminView.ajouterElement();
-    elementService.addElement(element);
+    elementService.save(element);
   }
   private void afficherElements() throws SQLException {
-    List<ModuleElement> elements = elementService.getAllElements();
+    List<ModuleElement> elements = elementService.findAll();
     adminView.afficherElements(elements);
   }
   private void RechercherElementParCode() throws SQLException {
     String code = adminView.getElementbyCode();
-    Optional<ModuleElement> element = elementService.getElementByCode(code);
-    if(element.isPresent()){
-      adminView.afficherElement(element.get());
-    }
+    ModuleElement element = elementService.findById(code);
+      adminView.afficherElement(element);
   }
   private void supprimerElement() throws SQLException {
     String code = adminView.supprimerElement();
-    elementService.removeElement(code);
+    elementService.delete(code);
   }
 
   private void mettreAJourElement() throws SQLException {
     ModuleElement element = adminView.mettreAJourElement();
-    elementService.modifyElement(element);
+    elementService.updateModuleElement(element);
   }
 
   /*Gestion des éléments*/
@@ -322,7 +315,8 @@ public class AdminController {
   //Ajouter etudiant
   private void ajouterStudent() throws SQLException {
     Student student = adminView.GetStudent();
-    adminView.afficherMessageajoutetudiant(StudentServiceImpl.getInstance().addStudent(student));
+    adminView.afficherMessageajoutetudiant(
+      studentService.save(student));
   }
 
   private void mettreAJourStudent() throws SQLException {
@@ -332,20 +326,18 @@ public class AdminController {
 
   private void supprimerStudent() throws SQLException {
     String id = adminView.supprimerStudent();
-    studentService.deleteStudent(id);
+    studentService.delete(id);
   }
 
   private void afficherStudents() throws SQLException {
-    List<Student> students = studentService.getAllStudents();
+    List<Student> students = studentService.findAll();
     adminView.afficherStudents(students);
   }
 
   private void rechercherStudent() throws SQLException {
     String lastName = adminView.getStudentName();
-    Optional<Student> student = studentService.findStudentByLastName(lastName);
-    if(student.isPresent()){
-      adminView.afficherStudent(student.get());
-    }
+    Student student = studentService.findStudentByLastName(lastName);
+      adminView.afficherStudent(student);
   }
 
 

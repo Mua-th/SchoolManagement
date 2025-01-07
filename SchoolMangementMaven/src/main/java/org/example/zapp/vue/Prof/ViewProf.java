@@ -63,13 +63,10 @@ public class ViewProf extends View  implements ViewProfInterface  , Observer {
   @Override
   public void displayModuleElements(List<ModuleElement> moduleElements) {
     System.out.println("Module Elements for Professor " + AppState.getUser().getFirstName() + ":");
-
     for (int i = 0; i < moduleElements.size(); i++) {
       ModuleElement moduleElement = moduleElements.get(i);
       System.out.println((i + 1) + ". Code: " + moduleElement.getCode() + ", Coefficient: " + moduleElement.getCoefficient());
     }
-
-    System.out.print("Enter the number of the module element to view subscribed students: ");
   }
 
   @Override

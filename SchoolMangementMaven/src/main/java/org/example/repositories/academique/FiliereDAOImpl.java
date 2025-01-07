@@ -1,4 +1,4 @@
-package org.example.repositories.FiliereDAO;
+package org.example.repositories.academique;
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
 import org.example.repositories.SuperRepo;

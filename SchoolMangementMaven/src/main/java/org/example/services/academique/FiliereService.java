@@ -1,9 +1,8 @@
-package org.example.services.user.FiliereService;
+package org.example.services.academique;
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
-import org.example.repositories.FiliereDAO.FiliereDAO;
-import org.example.repositories.FiliereDAO.FiliereDAOImpl;
-import org.example.repositories.StudentGradeRepo;
+import org.example.repositories.academique.FiliereDAO;
+import org.example.repositories.academique.FiliereDAOImpl;
 
 import java.sql.SQLException;
 import java.util.List;

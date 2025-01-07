@@ -13,6 +13,12 @@ public class ModuleElement {
   private Professor responsibleProfessor;
   private EvaluationModality evaluationModality;
 
+  public ModuleElement(String code, double coefficient, Module module) {
+    this.code = code;
+    this.coefficient = coefficient;
+    this.parentModule = module;
+  }
+
   public boolean isValidated() {
     return isValidated;
   }

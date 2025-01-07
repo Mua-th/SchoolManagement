@@ -23,4 +23,6 @@ public interface StudentGradeServiceInterface extends Service<StudentGrade, Stud
   boolean updateStudentGrade(StudentGrade studentGrade) throws SQLException;
 
   void exportGradesToExcel(String moduleElementCode, String filePath) throws SQLException, IOException, IOException;
+
+  boolean saveForAllModalities(String studentId, String moduleElementCode, double examGrade, double TpGrade, double projectGrade) throws SQLException;
 }

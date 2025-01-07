@@ -8,22 +8,26 @@ import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
 import org.example.models.note.StudentGradeBuilder;
 import org.example.models.note.StudentGradeId;
-import org.example.repositories.StudentGradeRepo;
+import org.example.repositories.note.StudentGradeRepo;
 import org.example.repositories.academique.ModuleElementDao;
 import org.example.repositories.academique.ModuleElementDaoImpl;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StudentGradeService implements StudentGradeServiceInterface {
 
   private static StudentGradeService instance;
-  private StudentGradeRepo studentGradeRepo = StudentGradeRepo.getInstance();
+  private StudentGradeRepo studentGradeRepo ;
+  private ModuleElementDao moduleElementDao ;
 
-  ModuleElementDao moduleElementDao = ModuleElementDaoImpl.getInstance();
   private StudentGradeService() {
+    studentGradeRepo = StudentGradeRepo.getInstance();
+    moduleElementDao = ModuleElementDaoImpl.getInstance();
   }
 
   public static StudentGradeService getInstance() {
@@ -121,6 +125,7 @@ public class StudentGradeService implements StudentGradeServiceInterface {
     }
     return false;
   }
+
   @Override
   public void exportGradesToExcel(String moduleElementCode, String filePath) throws SQLException, IOException {
     // Check if the module element is validated
@@ -133,13 +138,43 @@ public class StudentGradeService implements StudentGradeServiceInterface {
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet sheet = workbook.createSheet("Grades");
 
-    int rowNum = 0;
+    // Create header row
+    Row headerRow = sheet.createRow(0);
+    headerRow.createCell(0).setCellValue("Student ID");
+    headerRow.createCell(1).setCellValue("Module Element Code");
+    headerRow.createCell(2).setCellValue("EXAM Grade");
+    headerRow.createCell(3).setCellValue("TP Grade");
+    headerRow.createCell(4).setCellValue("PROJECT Grade");
+    headerRow.createCell(5).setCellValue("Average Grade");
+
+    // Create a map to store grades by student and modality
+    Map<String, Map<EvaluationModality, Double>> studentGradesMap = new HashMap<>();
+
     for (StudentGrade grade : grades) {
+      String studentId = grade.getStudentGradeId().getStudentId();
+      EvaluationModality modality = grade.getStudentGradeId().getEvaluationModality();
+      studentGradesMap
+        .computeIfAbsent(studentId, k -> new HashMap<>())
+        .put(modality, grade.getGrade());
+    }
+
+    int rowNum = 1;
+    for (Map.Entry<String, Map<EvaluationModality, Double>> entry : studentGradesMap.entrySet()) {
+      String studentId = entry.getKey();
+      Map<EvaluationModality, Double> gradesMap = entry.getValue();
+
       Row row = sheet.createRow(rowNum++);
-      row.createCell(0).setCellValue(grade.getStudentGradeId().getStudentId());
-      row.createCell(1).setCellValue(grade.getStudentGradeId().getModuleElementCode());
-      row.createCell(2).setCellValue(grade.getStudentGradeId().getEvaluationModality().name());
-      row.createCell(3).setCellValue(grade.getGrade());
+      row.createCell(0).setCellValue(studentId);
+      row.createCell(1).setCellValue(moduleElementCode);
+      row.createCell(2).setCellValue(gradesMap.getOrDefault(EvaluationModality.EXAM, 0.0));
+      row.createCell(3).setCellValue(gradesMap.getOrDefault(EvaluationModality.TP, 0.0));
+      row.createCell(4).setCellValue(gradesMap.getOrDefault(EvaluationModality.PROJECT, 0.0));
+
+      // Calculate the average grade
+      double averageGrade = (gradesMap.getOrDefault(EvaluationModality.EXAM, 0.0) * 0.30) +
+        (gradesMap.getOrDefault(EvaluationModality.TP, 0.0) * 0.20) +
+        (gradesMap.getOrDefault(EvaluationModality.PROJECT, 0.0) * 0.50);
+      row.createCell(5).setCellValue(averageGrade);
     }
 
     // Ensure the file path includes the file name and extension
@@ -153,7 +188,9 @@ public class StudentGradeService implements StudentGradeServiceInterface {
       throw new RuntimeException(e);
     }
     workbook.close();
-  }  public boolean saveForAllModalities(String studentId, String moduleElementCode, double examGrade , double TpGrade , double projectGrade) throws SQLException {
+  }
+  @Override
+  public boolean saveForAllModalities(String studentId, String moduleElementCode, double examGrade , double TpGrade , double projectGrade) throws SQLException {
 
     StudentGrade examStudentGrade = new StudentGradeBuilder().studentGradeId(
       new StudentGradeId(studentId, moduleElementCode, EvaluationModality.EXAM)).grade(examGrade).build();

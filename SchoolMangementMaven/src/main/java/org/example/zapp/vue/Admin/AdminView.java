@@ -197,19 +197,6 @@ public class AdminView implements AdminViewInterface {
       }
     }
 
-    boolean isValidated = false;
-    validInput = false;
-
-    while(!validInput) {
-      try {
-        System.out.print("Validé (true/false) : ");
-        isValidated = scanner.nextBoolean();
-        validInput = true;
-      } catch (InputMismatchException var8) {
-        System.err.println("Erreur : Veuillez entrer true ou false pour la validation.");
-        scanner.nextLine();
-      }
-    }
 
     scanner.nextLine();
     System.out.print("Code du module : ");
@@ -225,12 +212,15 @@ public class AdminView implements AdminViewInterface {
     String code = scanner.nextLine();
     System.out.print("Nouveau coefficient : ");
     double coefficient = scanner.nextDouble();
-    System.out.print("Validé (true/false) : ");
-    boolean isValidated = scanner.nextBoolean();
+
     scanner.nextLine();
     System.out.print("Nouveau code du module : ");
     String moduleCode = scanner.nextLine();
-    ModuleElement updatedElement = new ModuleElement(code, coefficient, isValidated, new Module( moduleCode ));
+    ModuleElement updatedElement = new ModuleElementBuilder().setCode(code)
+            .setCoefficient(coefficient)
+            .setParentModule(new Module(moduleCode))
+            .build();
+
     System.out.println("Élément mis à jour avec succès !");
     return updatedElement;
   }
@@ -438,9 +428,7 @@ public class AdminView implements AdminViewInterface {
     if(b){
       System.out.println("Étudiant ajouté avec succès !");
     } else{
-
       System.out.println("Étudiant non ajouté car la filiére n'existe pas !");
-
     }
   }
 

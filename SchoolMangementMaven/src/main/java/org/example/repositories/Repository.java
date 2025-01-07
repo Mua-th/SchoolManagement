@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface Repository<T , ID> {
   T findById(ID id ) throws SQLException;
-  List<T> findAll() ;
+  List<T> findAll() throws SQLException;
   boolean save(T t) throws SQLException;
-  boolean delete(ID id) ;
+  boolean delete(ID id) throws SQLException;
 
 }
 

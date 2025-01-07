@@ -1,11 +1,11 @@
-package org.example.repositories;
+package org.example.repositories.note;
 
-import org.example.config.Database;
-import org.example.config.MySQLDatabase;
 import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
 import org.example.models.note.StudentGradeBuilder;
 import org.example.models.note.StudentGradeId;
+import org.example.repositories.Repository;
+import org.example.repositories.SuperRepo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentGradeRepo extends SuperRepo implements Repository<StudentGrade, StudentGradeId>{
+public class StudentGradeRepo extends SuperRepo implements Repository<StudentGrade, StudentGradeId> {
 
    public Connection getConnection() throws SQLException {
     return myDatabase.connect();}

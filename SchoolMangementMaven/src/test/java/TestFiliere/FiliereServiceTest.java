@@ -2,9 +2,9 @@ package TestFiliere;
 
 import org.example.models.academique.Filiere;
 import org.example.models.academique.Module;
-import org.example.repositories.FiliereDAO.FiliereDAO;
+import org.example.repositories.academique.FiliereDAO;
 
-import org.example.services.user.FiliereService.FiliereService;
+import org.example.services.academique.FiliereService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

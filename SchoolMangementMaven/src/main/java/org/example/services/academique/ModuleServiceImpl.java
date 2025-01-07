@@ -1,17 +1,15 @@
-package org.example.services.user.moduleserviceHM;
+package org.example.services.academique;
 
-import org.example.repositories.ModuleDAO.ModuleDaoHouda;
-import org.example.models.academique.Filiere;
+import org.example.repositories.academique.ModuleDao;
 import org.example.models.academique.Module;
-import org.example.models.academique.Semester;
-import org.example.repositories.ModuleDAO.ModuleDaoImplhouda;
+import org.example.repositories.academique.ModuleDaoImpl;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public class ModuleServiceImpl implements ModuleService {
     public static ModuleServiceImpl instance;
-    private final ModuleDaoHouda moduleDao= ModuleDaoImplhouda.getInstance();
+    private  ModuleDao moduleDao= ModuleDaoImpl.getInstance();
 
     // Constructeur privé pour empêcher l'instanciation directe
     private ModuleServiceImpl() {}
@@ -50,6 +48,11 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public void deleteModule(String code) throws SQLException {
         moduleDao.delete(code);
+    }
+
+    @Override
+    public void setModuleDao(ModuleDao moduleDaoMock) {
+        moduleDao = moduleDaoMock;
     }
 
 

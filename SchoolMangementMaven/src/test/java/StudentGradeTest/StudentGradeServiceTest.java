@@ -3,7 +3,7 @@ package StudentGradeTest;
 import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
 import org.example.models.note.StudentGradeId;
-import org.example.repositories.StudentGradeRepo;
+import org.example.repositories.note.StudentGradeRepo;
 import org.example.services.note.StudentGradeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +42,7 @@ public class StudentGradeServiceTest {
 
     assertEquals(15.5, average);
   }
+
 
   @Test
   public void testSaveForAllModalities() throws SQLException {

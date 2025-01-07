@@ -1,4 +1,4 @@
-package org.example.repositories.ModuleDAO;
+package org.example.repositories.academique;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,16 +13,16 @@ import org.example.models.academique.*;
 import org.example.models.academique.Module;
 import org.example.repositories.SuperRepo;
 
-public class ModuleDaoImplhouda extends SuperRepo implements ModuleDaoHouda {
-    private static ModuleDaoImplhouda instance;
+public class ModuleDaoImpl extends SuperRepo implements ModuleDao {
+    private static ModuleDaoImpl instance;
 
-    private ModuleDaoImplhouda() {
+    private ModuleDaoImpl() {
         super(myDatabase);
     }
 
-    public static ModuleDaoImplhouda getInstance() {
+    public static ModuleDaoImpl getInstance() {
         if (instance == null) {
-            instance = new ModuleDaoImplhouda();
+            instance = new ModuleDaoImpl();
         }
         return instance;
     }

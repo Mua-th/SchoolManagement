@@ -4,7 +4,7 @@ import org.example.config.Database;
 import org.example.models.note.EvaluationModality;
 import org.example.models.note.StudentGrade;
 import org.example.models.note.StudentGradeId;
-import org.example.repositories.StudentGradeRepo;
+import org.example.repositories.note.StudentGradeRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

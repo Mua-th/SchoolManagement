@@ -1,4 +1,4 @@
-package org.example.repositories.Prof;
+package org.example.repositories.User;
 
 import org.example.config.Database;
 import org.example.config.MySQLDatabase;
@@ -49,7 +49,7 @@ public class ProfessorDaoImpl extends SuperRepo implements Repository<User,Strin
 
   @Override
   public User findById(String id) throws SQLException {
-    Connection connection = myDatabase.connect();
+     myDatabase.connect();
     ResultSet rs = myDatabase.fetchResults(String.format("SELECT * FROM Users where id ='%s';" , id));
     String login ="" , firstName="" , lastName="" ;
     while (rs.next()) {

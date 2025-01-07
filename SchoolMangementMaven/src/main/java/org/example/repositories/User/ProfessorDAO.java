@@ -1,4 +1,4 @@
-package org.example.repositories.Prof;
+package org.example.repositories.User;
 
 
 import org.example.models.users.User.User;
