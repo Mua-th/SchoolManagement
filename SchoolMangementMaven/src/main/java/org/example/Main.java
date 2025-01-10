@@ -10,11 +10,18 @@ import org.example.models.users.User.UserRole;
 import org.example.repositories.SuperRepo;
 import org.example.repositories.User.StudentDAOImpl;
 import org.example.repositories.User.UserRepository;
+import org.example.repositories.academique.ModuleElementDaoImpl;
+import org.example.repositories.note.StudentGradeRepo;
 import org.example.services.academique.ModuleElementServiceImpl;
+import org.example.services.note.AccessControl;
+import org.example.services.note.AccessControlImpl;
 import org.example.services.note.StudentGradeService;
+
+import org.example.services.academique.FiliereService;
 import org.example.services.user.StudentService;
 import org.example.services.user.StudentServiceImpl;
 import org.example.services.user.UserService;
+import org.example.services.academique.ModuleServiceImpl;
 import org.example.zapp.AppState;
 import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
@@ -25,7 +32,7 @@ import org.example.zapp.vue.Prof.SwingViewProf;
 import org.example.zapp.vue.Prof.ViewProf;
 import org.example.zapp.vue.Prof.ViewProfInterface;
 
-import org.example.zapp.vue.SwingLoginView;
+
 import org.example.zapp.vue.Login.SwingLoginView;
 
 
@@ -63,15 +70,38 @@ public class Main {
     while (true) {
       if (AppState.getInstance().isAuthenticated()) {
         if (AppState.getInstance().getUser().getRole().equals(UserRole.Administrator)) {
-          AdminController adminController = new AdminController(adminView);
+          AdminController adminController = new AdminController(
+            FiliereService.getInstance() ,
+            new ModuleElementServiceImpl(
+              ModuleElementDaoImpl.getInstance() ,
+              StudentGradeService.getInstance(
+                StudentGradeRepo.getInstance(),
+                ModuleElementDaoImpl.getInstance(),
+                new AccessControlImpl(
+                  ModuleElementDaoImpl.getInstance()
+                )
+              )),
+
+            ModuleServiceImpl.getInstance(),
+
+            StudentServiceImpl.getInstance(StudentDAOImpl.getInstance()),
+            adminView ) ;
+
           adminController.handleInput();
         } else {
           StudentService studentService = StudentServiceImpl.getInstance(StudentDAOImpl.getInstance());
 
+          StudentGradeService studentGradeService = StudentGradeService.getInstance(
+            StudentGradeRepo.getInstance(),
+            ModuleElementDaoImpl.getInstance(),
+            new AccessControlImpl(
+              ModuleElementDaoImpl.getInstance()
+            )
+          ) ;
           ProfController profController = new ProfControllerBuilder()
             .setStudentService(studentService)
-            .setModuleElementService(new ModuleElementServiceImpl())
-            .setStudentGradeService(StudentGradeService.getInstance())
+            .setModuleElementService(ModuleElementServiceImpl.getInstance(studentGradeService , ModuleElementDaoImpl.getInstance()))
+            .setStudentGradeService(studentGradeService)
             .setAppState(AppState.getInstance())
             .setViewProf(viewProf)
             .build();

@@ -197,19 +197,6 @@ public class AdminView implements AdminViewInterface {
       }
     }
 
-    boolean isValidated = false;
-    validInput = false;
-
-    while(!validInput) {
-      try {
-        System.out.print("Validé (true/false) : ");
-        isValidated = scanner.nextBoolean();
-        validInput = true;
-      } catch (InputMismatchException var8) {
-        System.err.println("Erreur : Veuillez entrer true ou false pour la validation.");
-        scanner.nextLine();
-      }
-    }
 
     scanner.nextLine();
     System.out.print("Code du module : ");
@@ -225,12 +212,15 @@ public class AdminView implements AdminViewInterface {
     String code = scanner.nextLine();
     System.out.print("Nouveau coefficient : ");
     double coefficient = scanner.nextDouble();
-    System.out.print("Validé (true/false) : ");
-    boolean isValidated = scanner.nextBoolean();
+
     scanner.nextLine();
     System.out.print("Nouveau code du module : ");
     String moduleCode = scanner.nextLine();
-    ModuleElement updatedElement = new ModuleElement(code, coefficient, isValidated, new Module( moduleCode ));
+    ModuleElement updatedElement = new ModuleElementBuilder().setCode(code)
+            .setCoefficient(coefficient)
+            .setParentModule(new Module(moduleCode))
+            .build();
+
     System.out.println("Élément mis à jour avec succès !");
     return updatedElement;
   }
@@ -247,10 +237,12 @@ public class AdminView implements AdminViewInterface {
   public void afficherElements(List<ModuleElement> Elements) {
     System.out.println("Liste des éléments :");
     for (ModuleElement element : Elements) {
-      System.out.println(element.getCode() + " - " + element.getCoefficient()+ " - " +element.isValidated()+ " - " + element.getParentModule().getCode());
+      System.out.println(element.getCode() + " - " + element.getCoefficient() + " - " + element.isValidated() + " - " + element.getParentModule().getCode());
     }
+  }
 
   // Ajouter etudiant
+    @Override
   public Student GetStudent() {
     System.out.print("ID : ");
     String id = scanner.nextLine();
@@ -312,6 +304,7 @@ public class AdminView implements AdminViewInterface {
   }
 
   // Méthode pour afficher tous les étudiants
+  @Override
   public void afficherStudents(List<Student> students){
     System.out.println("Liste des étudiants :");
     for (Student student : students) {
@@ -334,7 +327,8 @@ public class AdminView implements AdminViewInterface {
     } else {
       System.out.println("élément non trouvé.");
     }}
-    
+
+  @Override
   public void rechercherStudent(Student s){
     System.out.print("Nom : ");
     String lastName = scanner.nextLine();
@@ -429,13 +423,12 @@ public class AdminView implements AdminViewInterface {
     }
   }
 
+  @Override
   public void afficherMessageajoutetudiant(boolean b) {
     if(b){
       System.out.println("Étudiant ajouté avec succès !");
     } else{
-
       System.out.println("Étudiant non ajouté car la filiére n'existe pas !");
-
     }
   }
 

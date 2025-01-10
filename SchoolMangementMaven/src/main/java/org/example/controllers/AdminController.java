@@ -2,15 +2,13 @@ package org.example.controllers;
 
 import org.example.models.academique.Filiere;
 import org.example.models.academique.ModuleElement;
-import org.example.services.user.ElementService.ElementServiceImpl;
-import org.example.services.user.FiliereService.FiliereService;
-import org.example.models.academique.Module;
-import org.example.services.user.moduleserviceHM.ModuleServiceImpl;
-import org.example.models.users.Student.Student;
+import org.example.services.academique.ModuleElementService;
 
-import org.example.services.user.FiliereService.FiliereService;
+import org.example.services.academique.FiliereService;
 import org.example.models.academique.Module;
-import org.example.services.user.StudentServicesabrin.StudentServiceImpl;
+import org.example.services.user.StudentService;
+import org.example.services.academique.ModuleService;
+import org.example.models.users.Student.Student;
 
 import org.example.zapp.vue.Admin.AdminView;
 import org.example.zapp.vue.Admin.AdminViewInterface;
@@ -25,9 +23,24 @@ public class AdminController {
 
   private AdminViewInterface adminView ;
 
+  private FiliereService filiereService ;
+  private ModuleService moduleService ;
 
-  public AdminController(AdminViewInterface adminView) {
-     this.adminView = AdminView.getInstance();
+  private ModuleElementService elementService ;
+
+
+  private StudentService studentService;
+
+
+
+
+
+  public AdminController(FiliereService filiereService, ModuleElementService elementService, ModuleService moduleService, StudentService studentService , AdminViewInterface adminView) {
+    this.filiereService = filiereService;
+    this.elementService = elementService;
+    this.moduleService = moduleService;
+    this.studentService = studentService;
+    this.adminView = adminView;
   }
 
   public void handleInput() throws SQLException {
@@ -113,13 +126,13 @@ public class AdminController {
 
   private void afficherModulesParFiliere() throws SQLException {
     String code = adminView.getFiliereCode();
-    List<Module> modules = FiliereService.getInstance().getModulesByFiliereCode(code);
+    List<Module> modules = filiereService.getModulesByFiliereCode(code);
     adminView.afficherModulesParFiliere(modules);
   }
 
 
   private void afficherFilieres() throws SQLException {
-    List<Filiere> filieres = FiliereService.getInstance().getAllFilieres();
+    List<Filiere> filieres = filiereService.getAllFilieres();
    adminView.afficherFilieres(filieres);
   }
 
@@ -127,7 +140,7 @@ public class AdminController {
 
   private void rechercherFiliere() throws SQLException {
    String code = adminView.getFiliereCode();
-   Optional<Filiere> filiere = FiliereService.getInstance().getFiliereByCode(code);
+   Optional<Filiere> filiere = filiereService.getFiliereByCode(code);
    if(filiere.isPresent()){
      adminView.afficherFiliere(filiere.get());
    }
@@ -135,21 +148,21 @@ public class AdminController {
 
   private void supprimerFiliere() throws SQLException {
     String code = adminView.supprimerFiliere();
-    FiliereService.getInstance().deleteFiliere(code);
+    filiereService.deleteFiliere(code);
   }
 
 
 
   private void mettreAJourFiliere() throws SQLException {
     Filiere filiere = adminView.mettreAJourFiliere();
-    FiliereService.getInstance().updateFiliere(filiere);
+   filiereService.updateFiliere(filiere);
   }
 
 
 
   private void ajouterFiliere() throws SQLException {
     Filiere filiere = adminView.ajouterFiliere();
-    FiliereService.getInstance().addFiliere(filiere);
+    filiereService.addFiliere(filiere);
   }
 /*Gestion des éléments*/
   public void handleMenuElement(String  choix) throws SQLException {
@@ -180,27 +193,25 @@ public class AdminController {
 
   private void ajouterElement() throws SQLException {
     ModuleElement element = adminView.ajouterElement();
-    ElementServiceImpl.getInstance().addElement(element);
+    elementService.save(element);
   }
   private void afficherElements() throws SQLException {
-    List<ModuleElement> elements = ElementServiceImpl.getInstance().getAllElements();
+    List<ModuleElement> elements = elementService.findAll();
     adminView.afficherElements(elements);
   }
   private void RechercherElementParCode() throws SQLException {
     String code = adminView.getElementbyCode();
-    Optional<ModuleElement> element = ElementServiceImpl.getInstance().getElementByCode(code);
-    if(element.isPresent()){
-      adminView.afficherElement(element.get());
-    }
+    ModuleElement element = elementService.findById(code);
+      adminView.afficherElement(element);
   }
   private void supprimerElement() throws SQLException {
     String code = adminView.supprimerElement();
-    ElementServiceImpl.getInstance().removeElement(code);
+    elementService.delete(code);
   }
 
   private void mettreAJourElement() throws SQLException {
     ModuleElement element = adminView.mettreAJourElement();
-    ElementServiceImpl.getInstance().modifyElement(element);
+    elementService.updateModuleElement(element);
   }
 
   /*Gestion des éléments*/
@@ -232,28 +243,28 @@ public class AdminController {
 /*Gestion des Modules*/
   private void ajouterModule() throws SQLException {
     Module module = adminView.ajouterModule();
-    ModuleServiceImpl.getInstance().addModule(module);
+    moduleService.addModule(module);
   }
   private void afficherMoudles() throws SQLException {
-    List<Module> modules = ModuleServiceImpl.getInstance().getAllModules();
+    List<Module> modules = moduleService.getAllModules();
     adminView.afficherModules(modules);
   }
   private void RechercherModuleParCode() throws SQLException {
     String code = adminView.getElementbyCode();
-    Optional<Module> module = ModuleServiceImpl.getInstance().getModuleByCode(code);
+    Optional<Module> module = moduleService.getModuleByCode(code);
     if(module.isPresent()){
       adminView.afficherModule(module.get());
     }
   }
   private void supprimerModule() throws SQLException {
     String code = adminView.supprimerModule();
-    ModuleServiceImpl.getInstance().deleteModule(code);
+   moduleService.deleteModule(code);
   }
 
 
   private void mettreAJourModule() throws SQLException {
     Module module = adminView.mettreAJourModule();
-    ModuleServiceImpl.getInstance().updateModule(module);
+    moduleService.updateModule(module);
   }
 
   private void handleManageProfessors() {
@@ -304,30 +315,29 @@ public class AdminController {
   //Ajouter etudiant
   private void ajouterStudent() throws SQLException {
     Student student = adminView.GetStudent();
-    adminView.afficherMessageajoutetudiant(StudentServiceImpl.getInstance().addStudent(student));
+    adminView.afficherMessageajoutetudiant(
+      studentService.save(student));
   }
 
   private void mettreAJourStudent() throws SQLException {
     Student student = adminView.mettreAJourStudent();
-    StudentServiceImpl.getInstance().updateStudent(student);
+    studentService.updateStudent(student);
   }
 
   private void supprimerStudent() throws SQLException {
     String id = adminView.supprimerStudent();
-    StudentServiceImpl.getInstance().deleteStudent(id);
+    studentService.delete(id);
   }
 
   private void afficherStudents() throws SQLException {
-    List<Student> students = StudentServiceImpl.getInstance().getAllStudents();
+    List<Student> students = studentService.findAll();
     adminView.afficherStudents(students);
   }
 
   private void rechercherStudent() throws SQLException {
     String lastName = adminView.getStudentName();
-    Optional<Student> student = StudentServiceImpl.getInstance().findStudentByLastName(lastName);
-    if(student.isPresent()){
-      adminView.afficherStudent(student.get());
-    }
+    Student student = studentService.findStudentByLastName(lastName);
+      adminView.afficherStudent(student);
   }
 
 

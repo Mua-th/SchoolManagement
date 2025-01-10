@@ -8,5 +8,8 @@ import java.sql.SQLException;
 public interface StudentDAO extends Repository<Student, String> {
   Student findByIdForProf(String professorId, String studentId) throws SQLException;
 
+  void updateStudent(Student student) throws SQLException;
+
+  Student findStudentByLastName(String lastName) throws SQLException;
 
 }

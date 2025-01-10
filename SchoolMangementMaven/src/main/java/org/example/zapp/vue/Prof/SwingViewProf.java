@@ -184,6 +184,11 @@ public class SwingViewProf extends Observable implements ViewProfInterface {
   }
 
   @Override
+  public void displayAverageGrade(ModuleElement moduleElement, double averageGrade) {
+
+  }
+
+  @Override
   public Student handleSubscribedStudentSelection(List<Student> students) {
     String[] options = students.stream().map(student -> student.getFirstName() + " " + student.getLastName()).toArray(String[]::new);
     int choice = JOptionPane.showOptionDialog(MainFrame.getInstance(), "Select a Student:", "Students",

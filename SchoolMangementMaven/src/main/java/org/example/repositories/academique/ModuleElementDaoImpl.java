@@ -13,20 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao {
-
   private ModuleElementDaoImpl() {
     super(myDatabase);
   }
-
   private static ModuleElementDaoImpl instance;
-
   public static ModuleElementDaoImpl getInstance() {
     if (instance == null) {
       instance = new ModuleElementDaoImpl();
     }
     return instance;
   }
-
   @Override
   public ModuleElement findById(String code) throws SQLException {
     String query = "SELECT * FROM ModuleElement WHERE code = ?";
@@ -40,7 +36,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return null;
   }
-
   @Override
   public List<ModuleElement> findAll() {
     List<ModuleElement> moduleElements = new ArrayList<>();
@@ -56,18 +51,14 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return moduleElements;
   }
-
-
-
   @Override
   public boolean save(ModuleElement moduleElement) throws SQLException {
-    String query = "INSERT INTO ModuleElement (code, coefficient, isValidated, moduleCode) VALUES (?, ?, ?, ?)";
+    String query = "INSERT INTO ModuleElement (code, coefficient, moduleCode) VALUES (?, ?, ?)";
     try (Connection connection = myDatabase.connect();
          PreparedStatement stmt = connection.prepareStatement(query)) {
       stmt.setString(1, moduleElement.getCode());
       stmt.setDouble(2, moduleElement.getCoefficient());
-      stmt.setBoolean(3, false); // Assuming isValidated is false by default
-      stmt.setString(4, moduleElement.getParentModule().getCode());
+      stmt.setString(3, moduleElement.getParentModule().getCode());
       myDatabase.executeStatement(stmt);
       return true;
     } catch (SQLException e) {
@@ -75,7 +66,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return false;
   }
-
   @Override
   public boolean delete(String code) {
     String query = "DELETE FROM ModuleElement WHERE code = ?";
@@ -89,7 +79,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return false;
   }
-
   @Override
   public List<ModuleElement> findAllByProfId(String professorId) throws SQLException {
     List<ModuleElement> moduleElements = new ArrayList<>();
@@ -108,7 +97,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return moduleElements;
   }
-
   @Override
   public boolean update(ModuleElement moduleElement) throws SQLException {
     String query = "UPDATE ModuleElement SET coefficient = ?, isValidated = ?, moduleCode = ? WHERE code = ?";
@@ -125,7 +113,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return false;
   }
-
   @Override
   public List<Student> getStudentsByModuleElement(String moduleElementCode) throws SQLException {
     List<Student> students = new ArrayList<>();
@@ -152,20 +139,12 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return students;
   }
-
-
-
   private ModuleElement mapResultSetToModuleElement(ResultSet rs) throws SQLException {
     ModuleElement moduleElement = new ModuleElement();
     moduleElement.setCode(rs.getString("code"));
     moduleElement.setCoefficient(rs.getDouble("coefficient"));
-
     moduleElement.setValidated(rs.getBoolean("isValidated"));
-
     moduleElement.setParentModule(new Module(rs.getString("moduleCode")));
-
-
-    // Assuming Module and Professor objects are set elsewhere
     return moduleElement;
   }
 }

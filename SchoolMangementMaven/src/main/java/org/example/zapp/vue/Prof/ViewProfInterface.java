@@ -29,6 +29,7 @@ public interface ViewProfInterface extends ViewInterface {
 
   void displaySubscribedStudentsGrades(ModuleElement moduleElement, Map<Student, List<StudentGrade>> studentListMap);
 
+  void displayAverageGrade( ModuleElement moduleElement , double averageGrade);
   Student handleSubscribedStudentSelection(List<Student> students);
 
   void displayStudentGrade(StudentGrade studentGrade);
