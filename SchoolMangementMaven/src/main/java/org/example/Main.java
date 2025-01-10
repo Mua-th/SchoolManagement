@@ -11,7 +11,10 @@ import org.example.repositories.SuperRepo;
 import org.example.repositories.User.StudentDAOImpl;
 import org.example.repositories.User.UserRepository;
 import org.example.repositories.academique.ModuleElementDaoImpl;
+import org.example.repositories.note.StudentGradeRepo;
 import org.example.services.academique.ModuleElementServiceImpl;
+import org.example.services.note.AccessControl;
+import org.example.services.note.AccessControlImpl;
 import org.example.services.note.StudentGradeService;
 
 import org.example.services.academique.FiliereService;
@@ -71,7 +74,13 @@ public class Main {
             FiliereService.getInstance() ,
             new ModuleElementServiceImpl(
               ModuleElementDaoImpl.getInstance() ,
-              StudentGradeService.getInstance()),
+              StudentGradeService.getInstance(
+                StudentGradeRepo.getInstance(),
+                ModuleElementDaoImpl.getInstance(),
+                new AccessControlImpl(
+                  ModuleElementDaoImpl.getInstance()
+                )
+              )),
 
             ModuleServiceImpl.getInstance(),
 
@@ -82,7 +91,13 @@ public class Main {
         } else {
           StudentService studentService = StudentServiceImpl.getInstance(StudentDAOImpl.getInstance());
 
-          StudentGradeService studentGradeService = StudentGradeService.getInstance() ;
+          StudentGradeService studentGradeService = StudentGradeService.getInstance(
+            StudentGradeRepo.getInstance(),
+            ModuleElementDaoImpl.getInstance(),
+            new AccessControlImpl(
+              ModuleElementDaoImpl.getInstance()
+            )
+          ) ;
           ProfController profController = new ProfControllerBuilder()
             .setStudentService(studentService)
             .setModuleElementService(ModuleElementServiceImpl.getInstance(studentGradeService , ModuleElementDaoImpl.getInstance()))

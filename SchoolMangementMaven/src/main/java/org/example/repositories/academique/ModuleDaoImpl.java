@@ -111,7 +111,6 @@ public class ModuleDaoImpl extends SuperRepo implements ModuleDao {
             throw new SQLException("Erreur lors de l'ajout du module.", e);
         }
     }
-
     @Override
     public void update(Module module) throws SQLException {
         String query = "UPDATE module SET name = ?, semester = ? WHERE code = ?";

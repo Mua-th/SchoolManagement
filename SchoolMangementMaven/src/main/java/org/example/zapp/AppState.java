@@ -51,7 +51,7 @@ public class AppState {
     isAuthenticated = authenticated;
   }
 
-  public static User getUser() {
+  public  User getUser() {
     return user;
   }
 

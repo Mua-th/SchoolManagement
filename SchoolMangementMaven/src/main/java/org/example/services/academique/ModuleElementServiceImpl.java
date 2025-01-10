@@ -57,20 +57,17 @@ public class ModuleElementServiceImpl implements ModuleElementService {
         if (moduleElement != null) {
             List<StudentGrade> studentGrades = studentGradeService.findByModuleElement(moduleElementCode);
 
-            // Check if all grades are entered
             for (StudentGrade grade : studentGrades) {
                 if (grade.getGrade() == null) {
                     throw new Exception("All grades must be entered before validation.");
                 }
             }
-
             // Check if all grades are between 0 and 20
             for (StudentGrade grade : studentGrades) {
                 if (grade.getGrade() < 0 || grade.getGrade() > 20) {
                     throw new Exception("All grades must be between 0 and 20.");
                 }
             }
-
             // Mark absent students
             for (StudentGrade grade : studentGrades) {
                 if (grade.isAbsent()) {
@@ -78,7 +75,6 @@ public class ModuleElementServiceImpl implements ModuleElementService {
                     studentGradeService.updateStudentGrade(grade);
                 }
             }
-
             moduleElement.setValidated(true);
             return moduleElementDao.update(moduleElement);
         }
@@ -87,7 +83,6 @@ public class ModuleElementServiceImpl implements ModuleElementService {
     @Override
     public List<Student> getSubscribedStudents(ModuleElement selectedmoduleElement) throws SQLException {
         // Implement logic to get all students subscribed to a ModuleElement
-
         return moduleElementDao.getStudentsByModuleElement(selectedmoduleElement.getCode());
     }
 

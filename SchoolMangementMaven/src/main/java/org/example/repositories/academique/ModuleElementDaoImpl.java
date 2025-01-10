@@ -13,20 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao {
-
   private ModuleElementDaoImpl() {
     super(myDatabase);
   }
-
   private static ModuleElementDaoImpl instance;
-
   public static ModuleElementDaoImpl getInstance() {
     if (instance == null) {
       instance = new ModuleElementDaoImpl();
     }
     return instance;
   }
-
   @Override
   public ModuleElement findById(String code) throws SQLException {
     String query = "SELECT * FROM ModuleElement WHERE code = ?";
@@ -40,7 +36,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return null;
   }
-
   @Override
   public List<ModuleElement> findAll() {
     List<ModuleElement> moduleElements = new ArrayList<>();
@@ -56,7 +51,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return moduleElements;
   }
-
   @Override
   public boolean save(ModuleElement moduleElement) throws SQLException {
     String query = "INSERT INTO ModuleElement (code, coefficient, moduleCode) VALUES (?, ?, ?)";
@@ -145,7 +139,6 @@ public class ModuleElementDaoImpl extends SuperRepo implements ModuleElementDao 
     }
     return students;
   }
-
   private ModuleElement mapResultSetToModuleElement(ResultSet rs) throws SQLException {
     ModuleElement moduleElement = new ModuleElement();
     moduleElement.setCode(rs.getString("code"));

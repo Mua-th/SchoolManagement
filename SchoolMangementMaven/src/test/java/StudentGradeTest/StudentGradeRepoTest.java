@@ -54,7 +54,6 @@ public class StudentGradeRepoTest {
     assertEquals(15.0, studentGrade.getGrade());
   }
 
-
   @Test
   public void saveShouldInsertNewRecordWhenNotExists() throws SQLException {
     StudentGrade studentGrade = new StudentGrade(new StudentGradeId("student1", "module1", EvaluationModality.EXAM), 15.0);
@@ -92,11 +91,8 @@ public class StudentGradeRepoTest {
   @Test
   public void saveShouldThrowExceptionForGradeGreaterThanTwenty() {
     StudentGrade studentGrade = new StudentGrade(new StudentGradeId("student1", "module1", EvaluationModality.EXAM), 21.0);
-
     assertThrows(IllegalArgumentException.class, () -> {
       studentGradeRepo.save(studentGrade);
     });
   }
-
-
 }

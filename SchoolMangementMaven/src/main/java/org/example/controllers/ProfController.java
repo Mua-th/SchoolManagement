@@ -72,7 +72,8 @@ public class ProfController implements Observer {
         viewProf.displayMessage("Failed to validate module element.");
       }
     }  catch (Exception e) {
-      viewProf.displayMessage(e.getMessage());
+      e.printStackTrace();
+
     }
   }
 
@@ -82,19 +83,25 @@ public class ProfController implements Observer {
       String filePath = viewProf.getFilePathForExport();
       studentGradeService.exportGradesToExcel(moduleElementCode, filePath);
       viewProf.displayMessage("Grades exported successfully.");
-    } catch (SQLException | IOException e) {
-      e.printStackTrace();
+    } catch (IllegalArgumentException  | SQLException | IOException e ) {
+
       viewProf.displayMessage("Failed to export grades.");
+     e.printStackTrace();
+    } catch (Exception e) {
+      viewProf.displayMessage("Failed to export grades.");
+      //viewProf.displayMessage( e.getMessage());
+      e.printStackTrace();
+
     }
   }
 
   public void handleFindStudentById() {
     try {
       String studentId = viewProf.findStudentByIdForm();
-      Student student = studentService.findByIdForProf(AppState.getUser().getId(), studentId);
+      Student student = studentService.findByIdForProf(AppState.getInstance().getUser().getId(), studentId);
       if (student != null) {
         viewProf.displayStudent(student);
-        List<ModuleElement> moduleElements = moduleElementService.getModuleElementsByProfId(AppState.getUser().getId());
+        List<ModuleElement> moduleElements = moduleElementService.getModuleElementsByProfId(AppState.getInstance().getUser().getId());
         for (ModuleElement moduleElement : moduleElements) {
           List<StudentGrade> studentGrades = studentGradeService.getStudentGradesByModuleElement(studentId, moduleElement.getCode());
           double averageGrade = studentGradeService.calculateWeightedAverage(studentGrades);
@@ -109,7 +116,7 @@ public class ProfController implements Observer {
   }
   public void handleViewModuleElements() {
     try {
-      String professorId = AppState.getUser().getId();
+      String professorId = AppState.getInstance().getUser().getId();
       List<ModuleElement> moduleElements = moduleElementService.getModuleElementsByProfId(professorId);
       viewProf.displayModuleElements(moduleElements);
     } catch (SQLException e) {
@@ -119,8 +126,8 @@ public class ProfController implements Observer {
 
   public void handleInsertStudentGrade() {
     try {
-      viewProf.displayModuleElements(moduleElementService.getModuleElementsByProfId(AppState.getUser().getId()));
-      ModuleElement selectedModuleElement = viewProf.handleModuleElementSelection(moduleElementService.getModuleElementsByProfId(AppState.getUser().getId()));
+      viewProf.displayModuleElements(moduleElementService.getModuleElementsByProfId(AppState.getInstance().getUser().getId()));
+      ModuleElement selectedModuleElement = viewProf.handleModuleElementSelection(moduleElementService.getModuleElementsByProfId(AppState.getInstance().getUser().getId()));
       EvaluationModality evaluationModality = viewProf.getChosenModality();
       List<StudentGrade> studentGrades = viewProf.handleInserStudentGradeForModality(
         selectedModuleElement,

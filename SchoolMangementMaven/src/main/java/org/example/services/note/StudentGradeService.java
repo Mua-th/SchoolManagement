@@ -11,6 +11,7 @@ import org.example.models.note.StudentGradeId;
 import org.example.repositories.note.StudentGradeRepo;
 import org.example.repositories.academique.ModuleElementDao;
 import org.example.repositories.academique.ModuleElementDaoImpl;
+import org.example.zapp.AppState;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,17 +25,19 @@ public class StudentGradeService implements StudentGradeServiceInterface {
   private static StudentGradeService instance;
   private StudentGradeRepo studentGradeRepo ;
   private ModuleElementDao moduleElementDao ;
+  private AccessControl accessControl;
 
-  private StudentGradeService() {
-    studentGradeRepo = StudentGradeRepo.getInstance();
-    moduleElementDao = ModuleElementDaoImpl.getInstance();
+  public StudentGradeService(StudentGradeRepo studentGradeRepo, ModuleElementDao moduleElementDao, AccessControl accessControl) {
+    this.studentGradeRepo = studentGradeRepo;
+    this.moduleElementDao = moduleElementDao;
+    this.accessControl = accessControl;
   }
 
-  public static StudentGradeService getInstance() {
+  public static StudentGradeService getInstance(  StudentGradeRepo studentGradeRepo, ModuleElementDao moduleElementDao, AccessControl accessControl) {
     if (instance == null) {
       synchronized (StudentGradeService.class) {
         if (instance == null) {
-          instance = new StudentGradeService();
+          instance = new StudentGradeService(studentGradeRepo, moduleElementDao, accessControl) ;
         }
       }
     }
@@ -127,18 +130,21 @@ public class StudentGradeService implements StudentGradeServiceInterface {
   }
 
   @Override
-  public void exportGradesToExcel(String moduleElementCode, String filePath) throws SQLException, IOException {
-    // Check if the module element is validated
-    ModuleElement moduleElement = moduleElementDao.findById(moduleElementCode);
-    if (moduleElement == null || !moduleElement.isValidated()) {
-      throw new IllegalArgumentException("Module element is not validated.");
+  public void exportGradesToExcel(String moduleElementCode, String filePath) throws Exception {
+
+    String currentUserId = AppState.getInstance().getUser().getId();
+    if (!accessControl.hasAccess(currentUserId, moduleElementCode)) {
+      throw new Exception("User does not have access to this operation.");
     }
 
+    ModuleElement moduleElement = moduleElementDao.findById(moduleElementCode);
+    if (moduleElement == null || !moduleElement.isValidated()) {
+      throw new Exception("Module element is not validated.");
+    }
     List<StudentGrade> grades = studentGradeRepo.findByModuleElement(moduleElementCode);
     XSSFWorkbook workbook = new XSSFWorkbook();
     XSSFSheet sheet = workbook.createSheet("Grades");
 
-    // Create header row
     Row headerRow = sheet.createRow(0);
     headerRow.createCell(0).setCellValue("Student ID");
     headerRow.createCell(1).setCellValue("Module Element Code");
@@ -147,7 +153,6 @@ public class StudentGradeService implements StudentGradeServiceInterface {
     headerRow.createCell(4).setCellValue("PROJECT Grade");
     headerRow.createCell(5).setCellValue("Average Grade");
 
-    // Create a map to store grades by student and modality
     Map<String, Map<EvaluationModality, Double>> studentGradesMap = new HashMap<>();
 
     for (StudentGrade grade : grades) {
@@ -177,7 +182,6 @@ public class StudentGradeService implements StudentGradeServiceInterface {
       row.createCell(5).setCellValue(averageGrade);
     }
 
-    // Ensure the file path includes the file name and extension
     if (!filePath.endsWith(".xlsx")) {
       filePath += ".xlsx";
     }

@@ -15,24 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentGradeRepo extends SuperRepo implements Repository<StudentGrade, StudentGradeId> {
-
    public Connection getConnection() throws SQLException {
     return myDatabase.connect();}
-
-  //implement the singleton pattern for the StudentGradeRepo
   private static StudentGradeRepo instance;
-
   private StudentGradeRepo() {
     super(myDatabase);
   }
-
   public static StudentGradeRepo getInstance() {
     if (instance == null) {
       instance = new StudentGradeRepo();
     }
     return instance;
   }
-
   @Override
   public StudentGrade findById(StudentGradeId studentGradeId) throws SQLException {
     Connection connection = myDatabase.connect();
@@ -42,24 +36,19 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
     preparedStatement.setString(2, studentGradeId.getModuleElementCode());
     preparedStatement.setString(3, studentGradeId.getEvaluationModality().name());
     ResultSet resultSet = preparedStatement.executeQuery();
-
     StudentGrade studentGrade = null;
     if (resultSet.next()) {
       double grade = resultSet.getDouble("grade");
       studentGrade = new StudentGrade(studentGradeId, grade);
     }
-
     myDatabase.disconnect();
     return studentGrade;
   }
-
   @Override
   public List<StudentGrade> findAll() {
     //implement the findAll method to get all the grades of all students
     return null;
   }
-
-
   @Override
   public boolean save(StudentGrade studentGrade) throws SQLException {
     if (studentGrade.getGrade() < 0 || studentGrade.getGrade() > 20) {
@@ -110,13 +99,10 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
     }
     return true;
   }
-
   @Override
   public boolean delete(StudentGradeId studentGradeId) {
     return false;
   }
-
-  // implement a method to get all the grades of a student use sql query to get the grades
   public List<StudentGrade> getStudentGrades(String studentId) throws SQLException {
     Connection connection = myDatabase.connect();
 
@@ -146,7 +132,6 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
 
     return studentGrades;
   }
-
   public List<StudentGrade> findByModuleElement(String moduleElementCode) throws SQLException {
     Connection connection = myDatabase.connect();
     ResultSet resultSet = myDatabase.fetchResults(String.format("SELECT * FROM studentgrade WHERE moduleElementCode = '%s';", moduleElementCode));
@@ -168,7 +153,6 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
 
     return studentGrades;
   }
-
   public List<StudentGrade> getStudentGradesByModuleElement(String studentId, String moduleElementCode) throws SQLException {
     Connection connection = myDatabase.connect();
     ResultSet resultSet = myDatabase.fetchResults(String.format("SELECT * FROM studentgrade WHERE studentId = '%s' AND moduleElementCode = '%s';", studentId, moduleElementCode));
@@ -188,7 +172,6 @@ public class StudentGradeRepo extends SuperRepo implements Repository<StudentGra
 
     return studentGrades;
   }
-
   public List<StudentGrade> getStudentGradesByModuleElementAndModality(String studentId, String moduleElementCode, EvaluationModality evaluationModality) throws SQLException {
     Connection connection = myDatabase.connect();
     String query = "SELECT * FROM studentgrade WHERE studentId = ? AND moduleElementCode = ? AND modality = ?";
